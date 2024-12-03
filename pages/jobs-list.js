@@ -103,15 +103,6 @@ export default function JobList() {
             return updatedFilters;
         });
     };
-    // const filteredJobs = jobs.filter((job) => {
-    //     return filters.salaryRange.some((range) => {
-    //         const [minRange, maxRange] = salaryRanges[range];
-    //         return (
-    //             job.salary_min >= minRange &&
-    //             job.salary_max <= maxRange
-    //         );
-    //     });
-    // });
 
     const handleFilterApply = (e) => {
         e.preventDefault();
@@ -355,36 +346,6 @@ export default function JobList() {
                                                 </ul>
                                             </div>
 
-                                            {/* <div className="filter-block mb-30">
-                                                <h5 className="medium-heading mb-15">Salary Range</h5>
-                                                <div className="slider-container">
-                                                    <div className="range-values">
-                                                        <span>${salaryRange[0].toLocaleString()}</span> -
-                                                        <span>${salaryRange[1].toLocaleString()}</span>
-                                                    </div>
-                                                    <input
-                                                        type="range"
-                                                        name="min"
-                                                        min="0"
-                                                        max="200000"
-                                                        step="1000"
-                                                        value={salaryRange[0]}
-                                                        onChange={handleFilterApply}
-                                                        className="slider"
-                                                    />
-                                                    <input
-                                                        type="range"
-                                                        name="max"
-                                                        min="0"
-                                                        max="200000"
-                                                        step="1000"
-                                                        value={salaryRange[1]}
-                                                        onChange={handleFilterApply}
-                                                        className="slider"
-                                                    />
-                                                </div>
-                                            </div> */}
-
                                             {/* Experience Level Filter */}
                                             <div className="filter-block mb-30">
                                                 <h5 className="medium-heading mb-15">Experience Level</h5>
@@ -431,58 +392,9 @@ export default function JobList() {
                                         </div>
                                     </div>
                                 </div>
-                                {/* End Sidebar */}
                             </div>
                         </div>
                     </section>
-
-                    {/* News and Blog
-                    <section className="section-box mt-50 mb-50">
-                        <div className="container">
-                            <div className="text-start">
-                                <h2 className="section-title mb-10 wow animate__animated animate__fadeInUp">News and Blog</h2>
-                                <p className="font-lg color-text-paragraph-2 wow animate__animated animate__fadeInUp">Get the latest news, updates and tips</p>
-                            </div>
-                        </div>
-                        <div className="container">
-                            <div className="mt-50">
-                                <div className="box-swiper style-nav-top">
-                                    <BlogSlider />
-                                </div>
-                                <div className="text-center">
-                                    <Link href="blog-grid" className="btn btn-brand-1 btn-icon-load mt--30 hover-up">Load More Posts</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </section> */}
-
-                    {/* Newsletter */}
-                    {/* <section className="section-box mt-50 mb-20">
-                        <div className="container">
-                            <div className="box-newsletter">
-                                <div className="row">
-                                    <div className="col-xl-3 col-12 text-center d-none d-xl-block">
-                                        <img src="assets/imgs/template/newsletter-left.png" alt="bugbear" />
-                                    </div>
-                                    <div className="col-lg-12 col-xl-6 col-12">
-                                        <h2 className="text-md-newsletter text-center">
-                                            New Things Will Always
-                                            <br /> Update Regularly
-                                        </h2>
-                                        <div className="box-form-newsletter mt-40">
-                                            <form className="form-newsletter">
-                                                <input className="input-newsletter" type="text" placeholder="Enter your email here" />
-                                                <button className="btn btn-default font-heading icon-send-letter">Subscribe</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-3 col-12 text-center d-none d-xl-block">
-                                        <img src="assets/imgs/template/newsletter-right.png" alt="bugbear" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section> */}
                 </div>
             </Layout>
         </>

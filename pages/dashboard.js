@@ -114,9 +114,9 @@ export default function DashboardWithSidebar() {
                                     {/* <button className="px-4 py-2 rounded bg-blue-600 text-white text-lg">Create Job</button> */}
                                     <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-black shadow-xl hover:-translate-y-1 transition-transorm ">Create Job</button>
                                 </Link>
-                                <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-gray-200 shadow-xl hover:-translate-y-1 transition-transorm " onClick={() => setShowModal(true)}>
+                                {/* <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-gray-200 shadow-xl hover:-translate-y-1 transition-transorm " onClick={() => setShowModal(true)}>
                                     Create VDI
-                                </button>
+                                </button> */}
                             </div>
                         </div>
 
@@ -127,7 +127,7 @@ export default function DashboardWithSidebar() {
                                 >
                                     <h3 className="text-lg font-semibold">Total Jobs</h3>
                                     <p className="text-2xl font-bold text-gray-800">{stats.total_jobs}</p>
-                                    <span className="text-green-600">+25%</span>
+                                    {/* <span className="text-green-600">+25%</span> */}
                                 </div>
                                 <div
                                     className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -135,7 +135,7 @@ export default function DashboardWithSidebar() {
                                 >
                                     <h3 className="text-lg font-semibold">Open Jobs</h3>
                                     <p className="text-2xl font-bold text-gray-800">{stats.open_jobs}</p>
-                                    <span className="text-green-600">+5%</span>
+                                    {/* <span className="text-green-600">+5%</span> */}
                                 </div>
                                 <div
                                     className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -143,7 +143,7 @@ export default function DashboardWithSidebar() {
                                 >
                                     <h3 className="text-lg font-semibold">Closed Jobs</h3>
                                     <p className="text-2xl font-bold text-gray-800">{stats.closed_jobs}</p>
-                                    <span className="text-green-600">+12%</span>
+                                    {/* <span className="text-green-600">+12%</span> */}
                                 </div>
                                 <div
                                     className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -151,7 +151,7 @@ export default function DashboardWithSidebar() {
                                 >
                                     <h3 className="text-lg font-semibold">Total VDI</h3>
                                     <p className="text-2xl font-bold text-gray-800">{stats.total_vdi}</p>
-                                    <span className="text-green-600">+10%</span>
+                                    {/* <span className="text-green-600">+10%</span> */}
                                 </div>
                                 <div
                                     className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -159,7 +159,7 @@ export default function DashboardWithSidebar() {
                                 >
                                     <h3 className="text-lg font-semibold">Running VDI</h3>
                                     <p className="text-2xl font-bold text-gray-800">{stats.running_vdi}</p>
-                                    <span className="text-green-600">+8%</span>
+                                    {/* <span className="text-green-600">+8%</span> */}
                                 </div>
                                 <div
                                     className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -167,101 +167,9 @@ export default function DashboardWithSidebar() {
                                 >
                                     <h3 className="text-lg font-semibold">Closed VDI</h3>
                                     <p className="text-2xl font-bold text-gray-800">{stats.closed_vdi}</p>
-                                    <span className="text-green-600">+15%</span>
+                                    {/* <span className="text-green-600">+15%</span> */}
                                 </div>
                             </div>
-                        {/* {loading ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                               
-                                <div className="bg-gray-200 rounded-lg p-4 animate-pulse">
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-10 bg-gray-300 rounded mb-1"></div>
-                                    <div className="h-4 bg-gray-300 rounded"></div>
-                                </div>
-
-                               
-                                <div className="bg-gray-200 rounded-lg p-4 animate-pulse">
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-10 bg-gray-300 rounded mb-1"></div>
-                                    <div className="h-4 bg-gray-300 rounded"></div>
-                                </div>
-
-                                <div className="bg-gray-200 rounded-lg p-4 animate-pulse">
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-10 bg-gray-300 rounded mb-1"></div>
-                                    <div className="h-4 bg-gray-300 rounded"></div>
-                                </div>
-
-                                <div className="bg-gray-200 rounded-lg p-4 animate-pulse">
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-10 bg-gray-300 rounded mb-1"></div>
-                                    <div className="h-4 bg-gray-300 rounded"></div>
-                                </div>
-
-                                <div className="bg-gray-200 rounded-lg p-4 animate-pulse">
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-10 bg-gray-300 rounded mb-1"></div>
-                                    <div className="h-4 bg-gray-300 rounded"></div>
-                                </div>
-
-                                <div className="bg-gray-200 rounded-lg p-4 animate-pulse">
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-10 bg-gray-300 rounded mb-1"></div>
-                                    <div className="h-4 bg-gray-300 rounded"></div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-jobs?status=all")}
-                                >
-                                    <h3 className="text-lg font-semibold">Total Jobs</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.total_jobs}</p>
-                                    <span className="text-green-600">+25%</span>
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-jobs?status=open")}
-                                >
-                                    <h3 className="text-lg font-semibold">Open Jobs</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.open_jobs}</p>
-                                    <span className="text-green-600">+5%</span>
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-jobs?status=closed")}
-                                >
-                                    <h3 className="text-lg font-semibold">Closed Jobs</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.closed_jobs}</p>
-                                    <span className="text-green-600">+12%</span>
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-vdi?status=all")}
-                                >
-                                    <h3 className="text-lg font-semibold">Total VDI</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.total_vdi}</p>
-                                    <span className="text-green-600">+10%</span>
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-vdi?status=running")}
-                                >
-                                    <h3 className="text-lg font-semibold">Running VDI</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.running_vdi}</p>
-                                    <span className="text-green-600">+8%</span>
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-vdi?status=closed")}
-                                >
-                                    <h3 className="text-lg font-semibold">Closed VDI</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.closed_vdi}</p>
-                                    <span className="text-green-600">+15%</span>
-                                </div>
-                            </div>
-                        )} */}
 
                         {/* graph */}
                         <div className="p-6 flex gap-10">

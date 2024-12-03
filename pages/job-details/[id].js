@@ -10,16 +10,19 @@ import {
   FaStar,
   FaCheckCircle,
   FaTimesCircle,
+  FaCopy
 } from 'react-icons/fa';
 import { GoBriefcase } from "react-icons/go";
-import { useState, useEffect } from "react";  // Import useState and useEffect
-import { ToastContainer, toast } from 'react-toastify'; // Import toast notifications
-import 'react-toastify/dist/ReactToastify.css'; // Import styles for toast notifications
-import API_BASE_URL from "../../util/config"; // Import API base URL
+import { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import API_BASE_URL from "../../util/config";
 
 export default function JobDetails({ job, featuredJobs, token }) {
   const [isApplying, setIsApplying] = useState(false);
-  const [saved, setSaved] = useState(job?.saved || false); // Initialize with job.saved
+  const [saved, setSaved] = useState(job?.saved || false);
+  const [showVDIModal, setShowVDIModal] = useState(false); // State to control modal visibility
+  const [isSaving, setIsSaving] = useState(false); // Add missing isSaving state
 
   // Log client-side job data to compare with server-side
   useEffect(() => {
@@ -42,7 +45,7 @@ export default function JobDetails({ job, featuredJobs, token }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : undefined, // Use token passed as prop
+          Authorization: token ? `Bearer ${token}` : undefined,
         },
         body: JSON.stringify({ job_id: job.id }),
       });
@@ -69,7 +72,7 @@ export default function JobDetails({ job, featuredJobs, token }) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : undefined, // Use token passed as prop
+            Authorization: token ? `Bearer ${token}` : undefined,
           },
           body: JSON.stringify({ job_id: job.id }),
         }
@@ -89,7 +92,23 @@ export default function JobDetails({ job, featuredJobs, token }) {
 
   // Function to handle "Connect VDI"
   const handleConnectVDI = () => {
-    toast.info("Connecting to VDI...");
+    setShowVDIModal(true); // Show the modal when button is clicked
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setShowVDIModal(false);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toast.success("Copied to clipboard!");
+      },
+      () => {
+        toast.error("Failed to copy!");
+      }
+    );
   };
 
   function formatSalary(amount) {
@@ -297,11 +316,60 @@ export default function JobDetails({ job, featuredJobs, token }) {
               </div>
             </div>
           </section>
+
+          {/* VDI Modal */}
+          {showVDIModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h2>VDI Connection Information</h2>
+                <p>
+                  <a
+                    href="https://ap-south-1.webclient.amazonworkspaces.com/registration"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Click Here to connect to the VDI
+                  </a>
+                </p>
+                <p>
+                  <strong>Registration code:</strong> wsbom+XG7BUF 
+                  <button
+                    className="copy-button"
+                    onClick={() => copyToClipboard("wsbom+XG7BUF")}
+                  >
+                    <FaCopy />
+                  </button>
+                </p>
+                <p>
+                  <strong>Username:</strong> Sourav 
+                  <button
+                    className="copy-button"
+                    onClick={() => copyToClipboard("Sourav")}
+                  >
+                    <FaCopy />
+                  </button>
+                </p>
+                <p>
+                  <strong>Password:</strong> Vicky_532 
+                  <button
+                    className="copy-button"
+                    onClick={() => copyToClipboard("Vicky_532")}
+                  >
+                    <FaCopy />
+                  </button>
+                </p>
+                <button className="btn btn-primary" onClick={closeModal}>
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </Layout>
     </>
   );
 }
+
 
 
 import cookie from 'cookie'; // Import cookie module

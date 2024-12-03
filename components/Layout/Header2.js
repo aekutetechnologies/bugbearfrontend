@@ -36,10 +36,14 @@ const Header2 = () => {
   // Handle logo click based on token availability
   const handleLogoClick = () => {
     const token = localStorage.getItem("accessToken"); // Fetch token from localStorage
-    if (token) {
-      router.push("/jobs-list/"); // Redirect to jobs-list if token is available
+    const userType = localStorage.getItem("userType"); // Fetch userType from localStorage
+
+    if (token && userType === "3") {
+      router.push("/dashboard/"); // Redirect to dashboard if userType is 3
+    } else if (token && (userType === "1" || userType === "2")) {
+      router.push("/jobs-list/"); // Redirect to jobs-list if userType is 1 or 2
     } else {
-      router.push("/"); // Redirect to home if token is not available
+      router.push("/"); // Redirect to home if token is not available or userType is other
     }
   };
 

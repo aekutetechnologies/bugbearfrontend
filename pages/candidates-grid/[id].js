@@ -354,7 +354,7 @@ export default function CandidateGrid({ initialApplicants, jobId }) {
                             )}
                         </div>
                     </section>
-                    <section className="section-box mt-50 mb-50">
+                    {/* <section className="section-box mt-50 mb-50">
                         <div className="container">
                             <div className="text-start">
                                 <h2 className="section-title mb-10 wow animate__animated animate__fadeInUp">News and Blog</h2>
@@ -373,7 +373,7 @@ export default function CandidateGrid({ initialApplicants, jobId }) {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section> */}
                 </div>
             </Layout>
             <style jsx>{`

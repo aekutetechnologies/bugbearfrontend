@@ -53,6 +53,50 @@ const AuthButtons = () => {
 
   return (
     <>
+    {isLoggedIn && userType === "3" && (
+                         <div className="flex  gap-4">
+                        <Link
+                            href="/dashboard"
+                            className="text-gray-700 hover:text-white font-semibold"
+                        >
+                            <button>
+                                Dashboard
+                            </button>
+                        </Link>
+                        </div>
+
+                    )}
+                    {isLoggedIn && (userType === "1" || userType === "2") && (
+                        <div className="flex gap-4">
+                            <Link
+                                href="/jobs-list"
+                                className=" text-gray-700 hover:text-white font-semibold"
+                            >
+                                <button className="w-full">
+
+                                    Search Jobs
+                                </button>
+                            </Link>
+
+                            <Link
+                                href="/applied-jobs"
+                                className="text-gray-700 hover:text-white font-semibold"
+                            >
+                                <button className="w-full">
+                                    My Jobs
+                                </button>
+                            </Link>
+
+                            <Link
+                                href="/saved-jobs"
+                                className="text-gray-700 hover:text-white font-semibold"
+                            >
+                                <button className="w-full">
+                                    Saved Jobs
+                                </button>
+                            </Link>
+                        </div>
+                    )}
       {isLoggedIn ? (
         <div className="relative">
           <button
@@ -93,13 +137,13 @@ const AuthButtons = () => {
                   View Profile
                 </div>
               </Link>
-              <div
+              {/* <div
                 className="dropdown-item flex items-center p-2 cursor-pointer"
                 onClick={toggleSidebar}
               >
                 <FaCog className="mr-2" style={{ fontSize: "1.2rem" }} />
                 My Account
-              </div>
+              </div> */}
               <div
                 className="dropdown-item flex items-center p-2 cursor-pointer"
                 onClick={handleLogout}
