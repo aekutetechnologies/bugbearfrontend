@@ -61,55 +61,43 @@ export default function Home() {
                                             <br className="d-none d-lg-block" />
                                             to Get Your New Job
                                         </h1>
-                                        <div
-    className="banner-description mt-20 wow animate__animated animate__fadeInUp"
-    data-wow-delay=".1s"
->
-    Each month, more than 3 million job seekers turn to
-    <br className="d-none d-lg-block" />
-    our website in their search for work, making over
-    <br className="d-none d-lg-block" />
-    140,000 applications every single day
-</div>
-
-<div className="mt-6">
-    <div className="flex gap-4 mb-6">
-        <Link
-            href="/login"
-            className="btn btn-default btn-shadow hover-up"
-        >
-            Sign In
-        </Link>
-        <Link
-            href="/choose-role"
-            className="btn btn-default btn-shadow hover-up"
-        >
-            Register
-        </Link>
-    </div>
-
-    <div
-        className="list-tags-banner wow animate__animated animate__fadeInUp"
-        data-wow-delay=".3s"
-    >
-        <strong>Popular Searches:</strong>
-        <Link legacyBehavior href="#">
-            <a>DevSecOps, </a>
-        </Link>
-        <Link legacyBehavior href="#">
-            <a>VPAT, </a>
-        </Link>
-        <Link legacyBehavior href="#">
-            <a>Network Security, </a>
-        </Link>
-        <Link legacyBehavior href="#">
-            <a>WebProxy, </a>
-        </Link>
-        <Link legacyBehavior href="#">
-            <a>SOCaaS, </a>
-        </Link>
-    </div>
-</div>
+                                        <div className="banner-description mt-20 wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
+                                            Each month, more than 3 million job seekers turn to <br className="d-none d-lg-block" />
+                                            website in their search for work, making over 140,000 <br className="d-none d-lg-block" />
+                                            applications every single day
+                                        </div>
+                                        <div className="form-find mt-40 wow animate__animated animate__fadeIn" data-wow-delay=".2s">
+                                            <form onSubmit={handleSearch}>
+                                                <input
+                                                    className="form-input input-keysearch mr-10"
+                                                    type="text"
+                                                    placeholder="Your keyword..."
+                                                    value={keyword}
+                                                    onChange={(e) => setKeyword(e.target.value)}
+                                                />
+                                                <button className="btn btn-default btn-find font-sm" type="submit">
+                                                    Search
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div className="list-tags-banner mt-60 wow animate__animated animate__fadeInUp" data-wow-delay=".3s">
+                                            <strong>Popular Searches:</strong>
+                                            <Link legacyBehavior href="#">
+                                                <a>DevSecOps, </a>
+                                            </Link>
+                                            <Link legacyBehavior href="#">
+                                                <a>VPAT, </a>
+                                            </Link>
+                                            <Link legacyBehavior href="#">
+                                                <a>Network Security, </a>
+                                            </Link>
+                                            <Link legacyBehavior href="#">
+                                                <a>WebProxy, </a>
+                                            </Link>
+                                            <Link legacyBehavior href="#">
+                                                <a>SOCaaS, </a>
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-xl-4 col-lg-12 d-none d-xl-block col-md-6">
