@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* .swiper-grid-jobobx {
+  width: 100%;
+}
+
+.swiper-grid-jobobx .swiper-slide {
+  width: 100%;
+  height: auto; 
+  height: calc((100% - 30px) / 2); 
+}
+
+@media (min-width: 768px) {
+  .swiper-grid-jobobx .swiper-slide {
+    width: calc(100% / 2); 
+  }
+}
+
+@media (min-width: 1024px) {
+  .swiper-grid-jobobx .swiper-slide {
+    width: calc(100% / 3); 
+  }
+} */
+
+
+
+/* style for loader */
+
+@keyframes wave1 {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.5);
+  }
+}
+
+@keyframes wave2 {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(0.6);
+  }
+}
+
+@keyframes wave3 {
+  from {
+    transform: scaleY(0.6);
+  }
+  to {
+    transform: scaleY(0.8);
+  }
+}
+
+@keyframes wave4 {
+  from {
+    transform: scaleY(0.2);
+  }
+  to {
+    transform: scaleY(0.5);
+  }
+}
+
+/* Apply the animations to classes */
+.animate-wave1 {
+  animation: wave1 0.3s infinite alternate;
+}
+
+.animate-wave2 {
+  animation: wave2 0.5s infinite alternate;
+}
+
+.animate-wave3 {
+  animation: wave3 0.4s infinite alternate;
+}
+
+.animate-wave4 {
+  animation: wave4 0.3s infinite alternate;
+}
+
+/* You can also add any other global styles here */
+
