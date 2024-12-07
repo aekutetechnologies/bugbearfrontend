@@ -39,16 +39,16 @@ const CategorySlider = () => {
         <div className="relative py-10">
             <div className="overflow-hidden px-3">
                 <div
-                    className="flex  transition-transform duration-500"
+                    className="flex transition-transform duration-500"
                     style={{ transform: `translateX(-${currentSlide * (100 / slidesToShow)}%)` }}
                 >
                     {categories.map((item, i) => (
                         <div
                             key={i}
-                            className="flex-shrink-0 w-full md:w-1/3 lg:w-1/5 p-2 "
+                            className="flex-shrink-0 w-full md:w-1/3 lg:w-1/5 p-2"
                         >
                             <div className="bg-white rounded-lg p-4 mx-4 flex items-center justify-center h-52 shadow-md shadow-blue-200 hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
-                                <Link href="/jobs-list">
+                                <Link href={`/jobs-list?category=${encodeURIComponent(item.name)}`}>
                                     <div className="flex flex-col items-center">
                                         <div className="mb-3">
                                             <img
@@ -74,7 +74,6 @@ const CategorySlider = () => {
             </div>
 
             {/* Navigation buttons */}
-            {/* Navigation buttons */}
             <button
                 onClick={prevSlide}
                 className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-400 transition duration-200 ease-in-out"
@@ -87,7 +86,6 @@ const CategorySlider = () => {
             >
                 <span className="text-white text-lg font-bold">&gt;</span>
             </button>
-
         </div>
     );
 };

@@ -13,6 +13,7 @@ export default function Home() {
     const [keyword, setKeyword] = useState("");
     const router = useRouter();
     const [email, setEmail] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -33,16 +34,19 @@ export default function Home() {
 
         emailjs
             .send(
-                'service_ang9xrd',  // Replace with your EmailJS service ID
-                'template_mmpwfdn', // Replace with your EmailJS template ID
+                'service_de4izg9',  // Replace with your EmailJS service ID
+                'template_tdrb2en', // Replace with your EmailJS template ID
                 templateParams,
-                'Wkp-5jo3Ay-65MU35' // Replace with your EmailJS user ID
+                'WGPsHeCY4Y09-pxE0' // Replace with your EmailJS user ID
             )
             .then((response) => {
-                console.log('Email sent successfully!', response.status, response.text);
+                console.log("Email sent successfully!", response.status, response.text);
+                setShowPopup(true); // Show the popup on success
+                setTimeout(() => setShowPopup(false), 3000); // Auto-hide after 3 seconds
             })
             .catch((err) => {
-                console.error('Failed to send email:', err);
+                console.error("Failed to send email:", err);
+                alert("Failed to subscribe. Please try again later.");
             });
     };
 
@@ -190,7 +194,9 @@ export default function Home() {
                                     data-bs-toggle="modal"
                                     data-bs-target="#ModalApplyJobForm"
                                 >
-                                    Apply now
+                                <Link href="/login" passHref>
+                                        Apply Now
+                                </Link>
                                 </div>
                             </div>
                         </div>
@@ -336,6 +342,37 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
+
+                {/* Popup for "Thanks for Subscribing" */}
+                {showPopup && (
+                    <div className="popup-overlay">
+                        <div className="popup-content">
+                            <p>Thank you for subscribing! 🎉</p>
+                        </div>
+                    </div>
+                )}
+
+                <style jsx>{`
+                    .popup-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 1000;
+                    }
+                    .popup-content {
+                        background: white;
+                        padding: 20px 40px;
+                        border-radius: 8px;
+                        text-align: center;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                    }
+                `}</style>
             </Layout>
         </>
     );

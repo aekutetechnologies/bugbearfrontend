@@ -23,6 +23,8 @@ export default function Register() {
     });
 
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState("");
+    const [passwordValidationError, setPasswordValidationError] = useState("");
 
     useEffect(() => {
         const { usertype } = router.query;
@@ -45,6 +47,24 @@ export default function Register() {
             ...formData,
             [name]: type === "checkbox" ? checked : value,
         });
+
+        if (name === "password" || name === "password2") {
+            validatePassword(name === "password" ? value : formData.password, name === "password2" ? value : formData.password2);
+        }
+    };
+
+    const validatePassword = (password, confirmPassword) => {
+        const passwordStrengthRegex =
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (password && !passwordStrengthRegex.test(password)) {
+            setPasswordValidationError(
+                "Password must be at least 8 characters, include an uppercase letter, a number, and a special character."
+            );
+        } else if (password !== confirmPassword) {
+            setPasswordValidationError("Passwords do not match.");
+        } else {
+            setPasswordValidationError("");
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -88,10 +108,17 @@ export default function Register() {
     };
 
     const initiateMeriPehchaanLogin = () => {
-        const state = "random_string"; // Replace with a generated random string for CSRF protection
-        const authUrl = `${MERI_PECHHAAN_AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&state=${state}&scope=openid`;
+        // const state = "random_string"; // Replace with a generated random string for CSRF protection
+        // const authUrl = `${MERI_PECHHAAN_AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&state=${state}&scope=openid`;
 
-        window.location.href = authUrl;
+        // window.location.href = authUrl;
+        // Set the "Feature coming soon" message
+        setMessage("Feature coming soon");
+
+        // Clear the message after 3 seconds
+        setTimeout(() => {
+            setMessage("");
+        }, 3000);
     };
 
     const handleMeriPehchaanLogin = async (code) => {
@@ -150,15 +177,15 @@ export default function Register() {
                                     />
                                     <strong>Sign up with Meri Pehchaan</strong>
                                 </button>
+                                <p className="text-xs text-gray-500 italic mt-2">
+                                    Meri Pehchaan is a secure platform for authentication. Integration coming soon.
+                                </p>
                                 <div className="divider-text-center">
                                     <span>Or continue with</span>
                                 </div>
                             </div>
 
-                            <form
-                                className="login-register text-start mt-20"
-                                onSubmit={handleSubmit}
-                            >
+                            <form className="login-register text-start mt-20" onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label className="form-label" htmlFor="email">
                                         Email *
@@ -204,6 +231,11 @@ export default function Register() {
                                         required
                                     />
                                 </div>
+                                {passwordValidationError && (
+                                    <div className="alert alert-danger mt-2">
+                                        {passwordValidationError}
+                                    </div>
+                                )}
                                 <div className="login_footer form-group d-flex justify-content-between">
                                     <label className="cb-container">
                                         <input
@@ -225,12 +257,13 @@ export default function Register() {
                                     <button
                                         className="btn btn-brand-1 hover-up w-100"
                                         type="submit"
+                                        disabled={!formData.tc || !!passwordValidationError}
                                     >
                                         Submit &amp; Register
                                     </button>
                                 </div>
                                 <div className="text-muted text-center">
-                                    Already have an account?
+                                    Already have an account?{" "}
                                     <Link href="/login">
                                         <span>Sign in</span>
                                     </Link>

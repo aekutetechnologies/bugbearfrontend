@@ -23,14 +23,20 @@ export default function JobList() {
     const [salaryRange, setSalaryRange] = useState([0, 200000]);
 
     const router = useRouter();
-    const { keyword } = router.query;
+    const { keyword, category } = router.query;
 
     // Capture the keyword from the query and pass it to searchQuery
     useEffect(() => {
         if (keyword) {
             setSearchQuery(keyword);
         }
-    }, [keyword]);
+        if (category) {
+            setFilters((prevFilters) => ({
+                ...prevFilters,
+                category: [category], // Set category filter
+            }));
+        }
+    }, [keyword, category]);
 
     useEffect(() => {
         const storedToken = localStorage.getItem('accessToken');
