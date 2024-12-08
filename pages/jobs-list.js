@@ -19,7 +19,7 @@ export default function JobList() {
         jobType: [],
     });
     const [jobCount, setJobCount] = useState(0);
-    const [token, setToken] = useState(null);
+    // const [token, setToken] = useState(null);
     const [salaryRange, setSalaryRange] = useState([0, 200000]);
 
     const router = useRouter();
@@ -38,24 +38,25 @@ export default function JobList() {
         }
     }, [keyword, category]);
 
-    useEffect(() => {
-        const storedToken = localStorage.getItem('accessToken');
-        setToken(storedToken);
-    }, []);
+    // useEffect(() => {
+    //     const storedToken = localStorage.getItem('accessToken');
+    //     setToken(storedToken);
+    // }, []);
 
     const fetchJobs = async () => {
-        if (!token) {
-            console.error("Token is not available");
-            return;
-        }
+        // if (!token) {
+        //     console.error("Token is not available");
+        //     return;
+        // }
 
         setLoading(true);
         try {
+            console.log(API_BASE_URL);
             const res = await fetch(`${API_BASE_URL}jobs/search/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    // "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     title: searchQuery || "",
@@ -86,10 +87,10 @@ export default function JobList() {
 
     // Trigger fetchJobs whenever the filters or page changes
     useEffect(() => {
-        if (token) {
+        // if (token) {
             fetchJobs();
-        }
-    }, [filters, page, token]);
+        // }
+    }, [filters, page]);
 
     const handleSearch = (e) => {
         e.preventDefault();

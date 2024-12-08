@@ -15,11 +15,6 @@ export default function Contact() {
     const [agree, setAgree] = useState(false);
 
     const handleSubmit = () => {
-        if (!agree) {
-            toast.error('Please agree to our terms and policy.');
-            return;
-        }
-
         if (!name || !email || !message) {
             toast.error('Please fill out all required fields.');
             return;
@@ -34,7 +29,8 @@ export default function Contact() {
 
         const templateParams = {
             name: name,
-            email: email
+            email: email,
+            message: message,
         };
 
         emailjs.send(serviceId, templateId, templateParams, userId)
@@ -144,7 +140,13 @@ export default function Contact() {
                                                     onChange={(e) => setMessage(e.target.value)}
                                                 />
                                             </div>
-                                            <button className="submit btn btn-send-message" onClick={handleSubmit}>
+                                            <button
+                                                className={`submit btn btn-send-message ${
+                                                    !agree ? "opacity-50 cursor-not-allowed" : ""
+                                                }`}
+                                                onClick={handleSubmit}
+                                                disabled={!agree}
+                                            >
                                                 Send message
                                             </button>
                                             <label className="ml-20">
@@ -153,7 +155,8 @@ export default function Contact() {
                                                     type="checkbox"
                                                     checked={agree}
                                                     onChange={(e) => setAgree(e.target.checked)}
-                                                /> By contacting us, you agree to our terms and policy.
+                                                />{" "}
+                                                By contacting us, you agree to our terms and policy.
                                             </label>
                                         </div>
                                     </div>

@@ -55,7 +55,15 @@ export default function CreateJob() {
         fetch(`${API_BASE_URL}jobs/category/`)
             .then((response) => response.json())
             .then((data) => {
+                console.log(data);
                 setCategories(data);
+
+                if (data.length > 0) {
+                    setJobData((prev) => ({
+                        ...prev,
+                        category: data[0].id,
+                    }));
+                }
             })
             .catch((error) => {
                 console.error("Error fetching categories:", error);
@@ -137,30 +145,6 @@ export default function CreateJob() {
             job_expiry: jobData.job_expiry,
             featured: jobData.featured,
         };
-
-        // try {
-        //     const token = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
-        //     const response = await fetch(url, {
-        //         method: method,
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "Authorization": `Bearer ${token}`, // Add Authorization header
-        //         },
-        //         body: JSON.stringify(payload),
-        //     });
-
-        //     if (response.ok) {
-        //         console.log(payload);
-
-        //         toast.success(isEditing ? "Job updated successfully!" : "Job created successfully!");
-        //         router.push("/dashboard"); // Redirect to job listing page after success
-        //     } else {
-        //         toast.error("Something went wrong!");
-        //     }
-        // } catch (error) {
-        //     console.error("Error:", error);
-        //     toast.error("Error occurred while saving job.");
-        // }
 
         try {
             const token = localStorage.getItem('accessToken'); // Get access token
@@ -380,20 +364,6 @@ export default function CreateJob() {
                                             {/* Responsibilities */}
                                             <div className="form-group">
                                                 <label>Responsibilities</label>
-                                                {/* <textarea
-                                                    className="form-control"
-                                                    rows={3}
-                                                    name="responsibilities"
-                                                    value={jobData.responsibilities}
-                                                    onChange={handleInputChange}
-                                                /> */}
-                                                {/* <Editor
-                                                    className="form-control"
-                                                    rows={3}
-                                                    name="responsibilities"
-                                                    value={jobData.responsibilities}
-                                                    onChange={handleTextChange}
-                                                /> */}
                                                 <Editor
                                                     value={jobData.responsibilities}
                                                     onTextChange={(e) => handleTextChange('responsibilities', e.htmlValue)}
@@ -408,20 +378,6 @@ export default function CreateJob() {
                                             {/* Qualifications */}
                                             <div className="form-group">
                                                 <label>Qualifications</label>
-                                                {/* <textarea
-                                                    className="form-control"
-                                                    rows={3}
-                                                    name="qualifications"
-                                                    value={jobData.qualifications}
-                                                    onChange={handleInputChange}
-                                                /> */}
-                                                {/* <Editor
-                                                    className="form-control"
-                                                    rows={3}
-                                                    name="qualifications"
-                                                    value={jobData.qualifications}
-                                                    onChange={handleTextChange}
-                                                /> */}
                                                 <Editor
                                                     value={jobData.qualifications}
                                                     onTextChange={(e) => handleTextChange('qualifications', e.htmlValue)}
@@ -436,20 +392,6 @@ export default function CreateJob() {
                                             {/* Preferred Skills */}
                                             <div className="form-group">
                                                 <label>Preferred Skills</label>
-                                                {/* <textarea
-                                                    className="form-control"
-                                                    rows={3}
-                                                    name="preferredSkills"
-                                                    value={jobData.preferredSkills}
-                                                    onChange={handleInputChange}
-                                                /> */}
-                                                {/* <Editor
-                                                    className="form-control"
-                                                    rows={3}
-                                                    name="preferredSkills"
-                                                    value={jobData.preferredSkills}
-                                                    onChange={handleTextChange}
-                                                /> */}
                                                 <Editor
                                                     value={jobData.preferredSkills}
                                                     onTextChange={(e) => handleTextChange('preferredSkills', e.htmlValue)}

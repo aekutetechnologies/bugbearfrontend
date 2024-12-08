@@ -134,12 +134,6 @@ export default function Help() {
                                     )}
                                 </div>
                             ))}
-
-                            <div className="text-center mt-40">
-                                <Link href="/" className="btn btn-brand-1 hover-up">
-                                    Back to Home
-                                </Link>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ import Layout from "../components/Layout/Layout";
 
 import JobStats from "../components/elements/JobStats";
 import VdiStats from "../components/elements/VdiStats";
+import API_BASE_URL from "../util/config";
 // Register chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
