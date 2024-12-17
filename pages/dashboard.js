@@ -28,6 +28,9 @@ export default function DashboardWithSidebar() {
     const [showModal, setShowModal] = useState(false); // State to show/hide modal
     const [vdiName, setVdiName] = useState(""); // State for VDI name input
     const [isCreatingVDI, setIsCreatingVDI] = useState(false); // State to manage create VDI loading
+    const [showBulkJobModal, setShowBulkJobModal] = useState(false);
+    const [excelFile, setExcelFile] = useState(null); // State for uploaded file
+    const [isUploading, setIsUploading] = useState(false);
 
     // Fetch stats from the API
     useEffect(() => {
@@ -102,6 +105,81 @@ export default function DashboardWithSidebar() {
         }
     };
 
+    const handleFileUpload = async () => {
+        if (!excelFile) {
+            alert("Please select a file to upload.");
+            return;
+        }
+
+        setIsUploading(true);
+
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            router.push("/login");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", excelFile);
+
+        try {
+            const response = await fetch(`${API_BASE_URL}jobs/bulk-upload/`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("Bulk jobs uploaded successfully!");
+                setShowBulkJobModal(false);
+                setExcelFile(null); // Reset file input
+            } else {
+                alert("Failed to upload file.");
+            }
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            alert("An error occurred during file upload.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    // Function to download the sample Excel file
+    const handleDownloadSampleFile = () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            router.push("/login");
+            return;
+        }
+
+        fetch(`${API_BASE_URL}jobs/sample-file/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.blob();
+                }
+                throw new Error("Failed to download sample file.");
+            })
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", "sample_jobs.xlsx"); // Set the file name
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            })
+            .catch((error) => {
+                console.error("Error downloading sample file:", error);
+            });
+    };
+
 
     return (
         <Layout>
@@ -115,13 +193,19 @@ export default function DashboardWithSidebar() {
                                     {/* <button className="px-4 py-2 rounded bg-blue-600 text-white text-lg">Create Job</button> */}
                                     <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-black shadow-xl hover:-translate-y-1 transition-transorm ">Create Job</button>
                                 </Link>
+                            <button
+                                className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 shadow-xl hover:-translate-y-1 transition-transform"
+                                onClick={() => setShowBulkJobModal(true)}
+                            >
+                                Add Bulk Job
+                            </button>
                                 {/* <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-gray-200 shadow-xl hover:-translate-y-1 transition-transorm " onClick={() => setShowModal(true)}>
                                     Create VDI
                                 </button> */}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-0">
                                 <div
                                     className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
                                     onClick={() => router.push("/admin-jobs?status=all")}
@@ -173,7 +257,7 @@ export default function DashboardWithSidebar() {
                             </div>
 
                         {/* graph */}
-                        <div className="p-6 flex gap-10">
+                        <div className="p-6 flex gap-0 mx-0">
                             <div className="w-1/2 p-4 bg-white shadow-md shadow-blue-200 rounded-lg">
                                 <h3 className="text-lg font-semibold mb-4 text-gray-800">Jobs Created Over the Week</h3>
                                 <JobStats
@@ -189,13 +273,6 @@ export default function DashboardWithSidebar() {
                                 />
                             </div>
                         </div>
-
-
-                        {/* <div className="dashboard-graph">
-                            <h3 className="dashboard-section-title">Jobs Created Over the Week</h3>
-                            <Line data={chartData} options={chartOptions} />
-                            <LineChart data={chartData} options={chartOptions} />
-                        </div> */}
                     </main>
                 </div>
             </div>
@@ -229,6 +306,46 @@ export default function DashboardWithSidebar() {
                     </div>
                 </div>
             )}
+
+            {/* Bulk Job Modal */}
+            {showBulkJobModal && (
+                        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                            <div className="bg-white w-full max-w-md mx-auto p-6 rounded-lg shadow-lg">
+                                <h3 className="text-xl font-bold mb-4">Upload Bulk Jobs</h3>
+                                <input
+                                    type="file"
+                                    accept=".xlsx"
+                                    onChange={(e) => setExcelFile(e.target.files[0])}
+                                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                                />
+                                <div className="flex justify-between items-center mb-4">
+                                    <a
+                                        onClick={handleDownloadSampleFile}
+                                        className="text-blue-500 hover:underline cursor-pointer"
+                                    >
+                                        Download Sample File
+                                    </a>
+                                </div>
+                                <div className="flex justify-end space-x-4">
+                                    <button
+                                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                                        onClick={() => setShowBulkJobModal(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${
+                                            isUploading ? "cursor-not-allowed opacity-50" : ""
+                                        }`}
+                                        onClick={handleFileUpload}
+                                        disabled={isUploading}
+                                    >
+                                        {isUploading ? "Uploading..." : "Upload"}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
         </Layout>
     );
