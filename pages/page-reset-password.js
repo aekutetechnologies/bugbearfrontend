@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Layout from "../components/Layout/Layout";
 import Link from "next/link";
+import API_BASE_URL from "../util/config";
 
 export default function Reset() {
     const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ export default function Reset() {
         setLoading(true);
 
         try {
-            const response = await fetch("http://35.154.204.105/api/user/send-reset-password-email/", {
+            const response = await fetch(`${API_BASE_URL}user/send-reset-password-email/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

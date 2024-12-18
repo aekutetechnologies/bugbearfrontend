@@ -25,6 +25,7 @@ export default function Register() {
     const [error, setError] = useState(null);
     const [message, setMessage] = useState("");
     const [passwordValidationError, setPasswordValidationError] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
 
     useEffect(() => {
         const { usertype } = router.query;
@@ -69,12 +70,12 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (formData.password !== formData.password2) {
             toast.error("Passwords do not match");
             return;
         }
-
+    
         const body = {
             email: formData.email,
             password: formData.password,
@@ -82,7 +83,7 @@ export default function Register() {
             tc: formData.tc,
             user_type: formData.user_type,
         };
-
+    
         try {
             const res = await fetch(`${API_BASE_URL}user/register/`, {
                 method: "POST",
@@ -91,21 +92,36 @@ export default function Register() {
                 },
                 body: JSON.stringify(body),
             });
-
+    
             if (res.ok) {
-                toast.success("Registration successful!");
+                toast.success("Account successfully created!");
                 setError(null);
-                router.push("/login");
+    
+                // Delay the redirection to give users time to see the toast
+                setTimeout(() => {
+                    router.push("/login");
+                }, 3000); // 3-second delay
             } else {
+                // Handle server response errors safely
                 const errorData = await res.json();
-                toast.error(errorData.detail || "Registration failed");
-                setError(errorData.detail || "Registration failed");
+    
+                if (errorData && errorData.msg) {
+                    toast.error(errorData.msg || "Registration failed");
+                    setError(errorData.msg || "Registration failed");
+                } else {
+                    // Fallback error message if structure is unexpected
+                    toast.error("An unexpected error occurred. Please try again.");
+                    setError("An unexpected error occurred. Please try again.");
+                }
             }
         } catch (err) {
+            // Catch network or other unexpected errors
+            console.error("Error during registration:", err);
             toast.error("Something went wrong. Please try again later.");
             setError("Something went wrong. Please try again later.");
         }
     };
+    
 
     const initiateMeriPehchaanLogin = () => {
         // const state = "random_string"; // Replace with a generated random string for CSRF protection
@@ -162,9 +178,6 @@ export default function Register() {
                             <div className="text-center">
                                 <p className="font-sm text-brand-2">Register</p>
                                 <h2 className="mt-10 mb-5 text-brand-1">Start for free Today</h2>
-                                <p className="font-sm text-muted mb-30">
-                                    Access to all features. No credit card required.
-                                </p>
                                 <button
                                     className="btn social-login hover-up mb-20 flex items-center justify-center gap-3"
                                     onClick={initiateMeriPehchaanLogin}
@@ -205,16 +218,26 @@ export default function Register() {
                                     <label className="form-label" htmlFor="password">
                                         Password *
                                     </label>
-                                    <input
-                                        className="form-control"
-                                        id="password"
-                                        type="password"
-                                        name="password"
-                                        placeholder="************"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        required
-                                    />
+                                    <div className="position-relative">
+                                        <input
+                                            className="form-control"
+                                            id="password"
+                                            type={showPassword ? "text" : "password"}
+                                            name="password"
+                                            placeholder="************"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            className="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            style={{ textDecoration: "none" }}
+                                        >
+                                            {showPassword ? "Hide" : "Show"}
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label" htmlFor="password2">

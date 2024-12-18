@@ -27,16 +27,20 @@ export default function JobList() {
 
     // Capture the keyword from the query and pass it to searchQuery
     useEffect(() => {
-        if (keyword) {
-            setSearchQuery(keyword);
+        if (router.isReady) {
+            if (keyword) {
+                console.log("Keyword from Query:", keyword);
+                setSearchQuery(keyword);
+            }
+            if (category) {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    category: [category],
+                }));
+            }
         }
-        if (category) {
-            setFilters((prevFilters) => ({
-                ...prevFilters,
-                category: [category], // Set category filter
-            }));
-        }
-    }, [keyword, category]);
+    }, [router.isReady, keyword, category]);
+    
 
     // useEffect(() => {
     //     const storedToken = localStorage.getItem('accessToken');
@@ -44,19 +48,12 @@ export default function JobList() {
     // }, []);
 
     const fetchJobs = async () => {
-        // if (!token) {
-        //     console.error("Token is not available");
-        //     return;
-        // }
-
         setLoading(true);
         try {
-            console.log(API_BASE_URL);
             const res = await fetch(`${API_BASE_URL}jobs/search/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    // "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     title: searchQuery || "",
@@ -68,19 +65,27 @@ export default function JobList() {
                     jobType: filters.jobType,
                 }),
             });
-
+    
             const data = await res.json();
-
+    
             if (data && data.results) {
                 setJobs(data.results);
                 setJobCount(data.count);
-                console.log(data.results)
+                
+                // If fewer results than page size, we're on the last page
+                if (data.results.length < pageSize) {
+                    // Optionally adjust page to last possible page
+                    const lastPage = Math.ceil(data.count / pageSize);
+                    setPage(lastPage);
+                }
             } else {
                 setJobs([]);
+                setJobCount(0);
             }
         } catch (error) {
             console.error("Failed to fetch jobs:", error);
             setJobs([]);
+            setJobCount(0);
         }
         setLoading(false);
     };
@@ -90,7 +95,7 @@ export default function JobList() {
         // if (token) {
             fetchJobs();
         // }
-    }, [filters, page]);
+    }, [filters, page, searchQuery]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -256,15 +261,23 @@ export default function JobList() {
                                                     <div className="paginations">
                                                         <ul className="pager">
                                                             <li>
-                                                                <a className="pager-prev" href="#" onClick={() => setPage(page - 1)} />
+                                                                <button 
+                                                                    className={`pager-prev ${page === 1 ? 'disabled' : ''}`} 
+                                                                    onClick={() => page > 1 && setPage(page - 1)}
+                                                                    disabled={page === 1}
+                                                                >
+                                                                </button>
                                                             </li>
                                                             <li>
-                                                                <Link href="#">
-                                                                    <span className="pager-number">{page}</span>
-                                                                </Link>
+                                                                <span className="pager-number">{page}</span>
                                                             </li>
                                                             <li>
-                                                                <a className="pager-next" href="#" onClick={() => setPage(page + 1)} />
+                                                                <button 
+                                                                    className={`pager-next ${jobs.length < pageSize ? 'disabled' : ''}`} 
+                                                                    onClick={() => jobs.length === pageSize && setPage(page + 1)}
+                                                                    disabled={jobs.length < pageSize}
+                                                                >
+                                                                </button>
                                                             </li>
                                                         </ul>
                                                     </div>

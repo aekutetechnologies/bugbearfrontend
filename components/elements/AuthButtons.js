@@ -7,29 +7,47 @@ import { fetchProfileData } from "../../util/api";
 
 const AuthButtons = () => {
   const [profileData, setProfileData] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Initialized to false
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userType, setUserType] = useState(null);
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      fetchProfileData(token)
-        .then((data) => {
+    const checkAuthStatus = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          const data = await fetchProfileData(token);
           setProfileData(data);
           setIsLoggedIn(true);
           setUserType(localStorage.getItem("userType"));
-        })
-        .catch((error) => {
-          console.error("Error fetching profile data:", error);
+        } else {
           setIsLoggedIn(false);
-        });
-    } else {
-      setIsLoggedIn(false);
-    }
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Check auth status immediately
+    checkAuthStatus();
+
+    // Listen for storage events to sync auth state across tabs
+    const handleStorageChange = () => {
+      checkAuthStatus();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Cleanup listener
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -37,6 +55,10 @@ const AuthButtons = () => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userType");
     Cookies.remove("token");
+    
+    // Trigger storage event to sync across tabs
+    window.dispatchEvent(new Event('storage'));
+
     setIsLoggedIn(false);
     setProfileData(null);
     setUserType(null);
@@ -47,56 +69,49 @@ const AuthButtons = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
+  // Render nothing during initial loading
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <>
-    {isLoggedIn && userType === "3" && (
-                         <div className="flex  gap-4">
-                        <Link
-                            href="/dashboard"
-                            className="text-gray-700 hover:text-white font-semibold"
-                        >
-                            <button>
-                                Dashboard
-                            </button>
-                        </Link>
-                        </div>
+      {isLoggedIn && userType === "3" && (
+        <div className="flex gap-4">
+          <Link
+            href="/dashboard"
+            className="text-gray-700 hover:text-white font-semibold"
+          >
+            <button>Dashboard</button>
+          </Link>
+        </div>
+      )}
+      
+      {isLoggedIn && (userType === "1" || userType === "2") && (
+        <div className="flex gap-4">
+          <Link
+            href="/jobs-list"
+            className="text-gray-700 hover:text-white font-semibold"
+          >
+            <button className="w-full">Search Jobs</button>
+          </Link>
 
-                    )}
-                    {isLoggedIn && (userType === "1" || userType === "2") && (
-                        <div className="flex gap-4">
-                            <Link
-                                href="/jobs-list"
-                                className=" text-gray-700 hover:text-white font-semibold"
-                            >
-                                <button className="w-full">
+          <Link
+            href="/applied-jobs"
+            className="text-gray-700 hover:text-white font-semibold"
+          >
+            <button className="w-full">My Jobs</button>
+          </Link>
 
-                                    Search Jobs
-                                </button>
-                            </Link>
-
-                            <Link
-                                href="/applied-jobs"
-                                className="text-gray-700 hover:text-white font-semibold"
-                            >
-                                <button className="w-full">
-                                    My Jobs
-                                </button>
-                            </Link>
-
-                            <Link
-                                href="/saved-jobs"
-                                className="text-gray-700 hover:text-white font-semibold"
-                            >
-                                <button className="w-full">
-                                    Saved Jobs
-                                </button>
-                            </Link>
-                        </div>
-                    )}
+          <Link
+            href="/saved-jobs"
+            className="text-gray-700 hover:text-white font-semibold"
+          >
+            <button className="w-full">Saved Jobs</button>
+          </Link>
+        </div>
+      )}
+      
       {isLoggedIn ? (
         <div className="relative">
           <button
@@ -137,13 +152,7 @@ const AuthButtons = () => {
                   View Profile
                 </div>
               </Link>
-              {/* <div
-                className="dropdown-item flex items-center p-2 cursor-pointer"
-                onClick={toggleSidebar}
-              >
-                <FaCog className="mr-2" style={{ fontSize: "1.2rem" }} />
-                My Account
-              </div> */}
+              
               <div
                 className="dropdown-item flex items-center p-2 cursor-pointer"
                 onClick={handleLogout}

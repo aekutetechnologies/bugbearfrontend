@@ -1,7 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
+import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
 import Layout from "../../components/Layout/Layout";
-import FeaturedSlider from "../../components/sliders/Featured";
 import { format } from 'date-fns';
+import cookie from 'cookie';
 import {
   FaIndustry,
   FaMoneyBillWave,
@@ -13,32 +14,110 @@ import {
   FaCopy
 } from 'react-icons/fa';
 import { GoBriefcase } from "react-icons/go";
-import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import API_BASE_URL from "../../util/config";
 
-export default function JobDetails({ job, featuredJobs, token }) {
+// Dynamically import FeaturedSlider with no SSR
+const FeaturedSlider = dynamic(() => import("../../components/sliders/Featured"), {
+  ssr: false
+});
+
+export default function JobDetails({ job: initialJob, featuredJobs, token }) {
+  // Client-side states
+  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [job, setJob] = useState(() => {
+    return initialJob || {
+      title: '',
+      job_type: '',
+      category: '',
+      salary_min: 0,
+      salary_max: 0,
+      experience: '',
+      location: '',
+      responsibilities: '',
+      skills: '',
+      qualifications: '',
+      is_active: false,
+      is_approved: false,
+      featured: false,
+      applied: false,
+      saved: false
+    };
+  });
   const [isApplying, setIsApplying] = useState(false);
-  const [saved, setSaved] = useState(job?.saved || false);
-  const [showVDIModal, setShowVDIModal] = useState(false); // State to control modal visibility
-  const [isSaving, setIsSaving] = useState(false); // Add missing isSaving state
-
-  // Log client-side job data to compare with server-side
+  const [saved, setSaved] = useState(initialJob?.saved || false);
+  const [showVDIModal, setShowVDIModal] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // Debug logging
   useEffect(() => {
-    console.log('Client-side job data:', job);
-  }, [job]);
+    console.log('Component mounted with job:', job);
+    console.log('Initial job:', initialJob);
+    console.log('API Base URL:', API_BASE_URL);
+  }, []);
 
-  if (!job) {
-    return <div>Job details not found!</div>;
+  // Set isClient to true once component mounts and handle initial loading
+  useEffect(() => {
+    setIsClient(true);
+    if (!initialJob) {
+      setError('Job not found');
+    } else {
+      setJob(initialJob);
+    }
+    setIsLoading(false);
+  }, [initialJob]);
+
+  // Format dates only on client-side
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
+    if (!isClient) return ''; // Return empty string during SSR
+    return format(new Date(date), 'MM/dd/yyyy');
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container">
+          <div className="flex justify-center items-center min-h-screen">
+            <div>Loading job details...</div>
+          </div>
+        </div>
+      </Layout>
+    );
   }
 
-  // Format the job_posted and job_expiry dates using date-fns
-  const jobPostedDate = job.job_posted ? format(new Date(job.job_posted), 'MM/dd/yyyy') : 'N/A';
-  const jobExpiryDate = job.job_expiry ? format(new Date(job.job_expiry), 'MM/dd/yyyy') : 'N/A';
+  // Error state
+  if (error) {
+    return (
+      <Layout>
+        <div className="container">
+          <div className="flex justify-center items-center min-h-screen">
+            <div>Error: {error}</div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
-  // Function to handle job application
+  // Not found state
+  if (!job.title) {
+    return (
+      <Layout>
+        <div className="container">
+          <div className="flex justify-center items-center min-h-screen">
+            <div>Job details not found!</div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   const handleApply = async () => {
+    if (isApplying) return;
     setIsApplying(true);
     try {
       const response = await fetch(`${API_BASE_URL}jobs/apply/`, {
@@ -49,21 +128,29 @@ export default function JobDetails({ job, featuredJobs, token }) {
         },
         body: JSON.stringify({ job_id: job.id }),
       });
-      if (!response.ok) {
+      
+      if (response.ok) {
+        toast.success("Job application submitted successfully!", {
+          toastId: 101,
+          containerId: "applyNotification",
+        });
+        setJob(prev => ({ ...prev, applied: true }));
+      } else {
         throw new Error(`Failed to apply for the job: ${response.status}`);
       }
-      toast.success("Job application submitted successfully!");
-      // Optionally update job.applied state if necessary
     } catch (error) {
       console.error("Error applying for job:", error);
-      toast.error("There was an issue applying for the job.");
+      toast.error("There was an issue applying for the job.", {
+        toastId: 102,
+        containerId: "applyNotification",
+      });
     } finally {
       setIsApplying(false);
     }
   };
 
-  // Function to handle job saving
   const handleSave = async () => {
+    if (!isClient) return;
     setIsSaving(true);
     try {
       const response = await fetch(
@@ -90,95 +177,89 @@ export default function JobDetails({ job, featuredJobs, token }) {
     }
   };
 
-  // Function to handle "Connect VDI"
-  const handleConnectVDI = () => {
-    setShowVDIModal(true); // Show the modal when button is clicked
-  };
-
-  // Function to close the modal
-  const closeModal = () => {
-    setShowVDIModal(false);
-  };
+  const handleConnectVDI = () => setShowVDIModal(true);
+  const closeModal = () => setShowVDIModal(false);
 
   const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text).then(
-      () => {
-        toast.success("Copied to clipboard!");
-      },
-      () => {
-        toast.error("Failed to copy!");
-      }
-    );
+    if (!isClient) return;
+    navigator.clipboard.writeText(text)
+      .then(() => toast.success("Copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy!"));
   };
 
   function formatSalary(amount) {
+    if (!amount) return 'N/A';
     if (amount >= 1000 && amount < 100000) {
-      return (amount / 1000).toFixed(0) + 'k';
+      return `${(amount / 1000).toFixed(0)}k`;
     } else if (amount >= 100000) {
-      return (amount / 100000).toFixed(0) + 'L';
+      return `${(amount / 100000).toFixed(0)}L`;
     }
     return amount;
   }
 
+  // Rest of your component JSX remains the same...
   return (
-    <>
-      <Layout>
-        <ToastContainer />
-        <div>
+    <Layout>
+      <div suppressHydrationWarning>
+        <ToastContainer containerId="applyNotification" />
           <section className="section-box-2">
             <div className="container">
               <div className="banner-hero banner-image-single">
                 <img src="/assets/imgs/page/job-single/thumb.png" alt="job-thumbnail" />
               </div>
               <div className="flex flex-wrap">
-                {/* First column: Job Title and Info */}
                 <div className="col-lg-8 col-md-12 flex flex-col justify-center">
                   <h3>{job.title || "Job Title"}</h3>
                   <div className="mt-10 mb-15 flex items-center gap-3">
                     <span className="text-xs flex gap-2 text-gray-500">
                       <GoBriefcase /> {job.job_type || "Full Time"}
                     </span>
-                    <span className="text-xs flex gap-2 text-gray-500">
-                      <FaClock /> {jobPostedDate}
-                    </span>
-                    <span className="text-xs flex gap-2 text-gray-500">
-                      <FaClock /> {jobExpiryDate}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Second column: Buttons and Save Icon */}
-                <div className="col-lg-4 col-md-12 flex items-center justify-end">
-                  <div className="flex items-center">
-                    {job.is_approved && (
-                      <button
-                        className="btn btn-connect-vdi hover-up mr-2"
-                        onClick={handleConnectVDI}
-                      >
-                        Connect VDI
-                      </button>
+                    {isClient && (
+                      <>
+                        <span className="text-xs flex gap-2 text-gray-500">
+                          <FaClock /> {formatDate(job.job_posted)}
+                        </span>
+                        <span className="text-xs flex gap-2 text-gray-500">
+                          <FaClock /> {formatDate(job.job_expiry)}
+                        </span>
+                      </>
                     )}
-
-                    <button
-                      className="btn btn-apply-icon btn-apply btn-apply-big hover-up"
-                      disabled={isApplying || job.applied}
-                      onClick={handleApply}
-                    >
-                      {job.applied
-                        ? "Applied"
-                        : isApplying
-                        ? "Applying..."
-                        : "Apply now"}
-                    </button>
-
-                    <FaStar
-                      size={24}
-                      color={saved ? "yellow" : "gray"}
-                      className="ml-2 cursor-pointer"
-                      onClick={handleSave}
-                    />
                   </div>
                 </div>
+
+                {isClient && (
+                  <div className="col-lg-4 col-md-12 flex items-center justify-end">
+                    <div className="flex items-center">
+                      {job.is_approved && (
+                        <button
+                          className="btn btn-connect-vdi hover-up mr-2"
+                          onClick={handleConnectVDI}
+                        >
+                          Connect VDI
+                        </button>
+                      )}
+
+                      <button
+                        className="btn btn-apply-icon btn-apply btn-apply-big hover-up"
+                        disabled={isApplying || job.applied}
+                        onClick={handleApply}
+                      >
+                        {job.applied
+                          ? "Applied"
+                          : isApplying
+                          ? "Applying..."
+                          : "Apply now"}
+                      </button>
+
+                      <FaStar
+                        size={24}
+                        color={saved ? "yellow" : "gray"}
+                        className="ml-2 cursor-pointer"
+                        onClick={handleSave}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="border-bottom pt-10 pb-10" />
@@ -299,8 +380,6 @@ export default function JobDetails({ job, featuredJobs, token }) {
                     />
                   </div>
                 </div>
-
-                {/* Sidebar or additional content here */}
               </div>
             </div>
           </section>
@@ -318,7 +397,7 @@ export default function JobDetails({ job, featuredJobs, token }) {
           </section>
 
           {/* VDI Modal */}
-          {showVDIModal && (
+          {isClient && showVDIModal && (
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>VDI Connection Information</h2>
@@ -366,87 +445,94 @@ export default function JobDetails({ job, featuredJobs, token }) {
           )}
         </div>
       </Layout>
-    </>
   );
 }
-
-
-
-import cookie from 'cookie'; // Import cookie module
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
+  if (!id) {
+    return {
+      notFound: true
+    };
+  }
+
   try {
-    // Parse cookies from the request header
     const cookies = context.req.headers.cookie
       ? cookie.parse(context.req.headers.cookie)
       : {};
-    const token = cookies.accessToken || null; // Get the token from cookies
+    const token = cookies.accessToken || null;
 
-    let job = null;
+    console.log(`Fetching job with ID: ${id} from ${API_BASE_URL}jobs/${id}`);
 
-    // Fetch job details with or without token
     const res = await fetch(`${API_BASE_URL}jobs/${id}`, {
       method: 'GET',
       headers: {
-        Authorization: token ? `Bearer ${token}` : undefined, // Pass the token if available
+        Authorization: token ? `Bearer ${token}` : undefined,
       },
     });
+
+    console.log('Job fetch response status:', res.status);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch job details: ${res.status}`);
     }
 
-    job = await res.json();
+    const job = await res.json();
+    console.log('Fetched job data:', job);
 
-    // If 'applied' or 'saved' fields are missing, set default values
-    if (!('applied' in job)) {
-      job.applied = false;
-    }
-    if (!('saved' in job)) {
-      job.saved = false;
-    }
-
-    // Fetch featured jobs with POST request
-    const featuredRes = await fetch(`${API_BASE_URL}jobs/search/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: "",
-        page: 1,
-        page_size: 4, // Limit the featured jobs to 4
-        category: [],
-        salaryRange: [],
-        experienceLevel: [],
-        jobType: [],
-      }),
-    });
-
-    if (!featuredRes.ok) {
-      throw new Error(`Failed to fetch featured jobs: ${featuredRes.status}`);
+    if (!job || !job.id) {
+      return {
+        notFound: true
+      };
     }
 
-    const featuredJobs = await featuredRes.json();
+    // Set default values for missing fields
+    const jobWithDefaults = {
+      applied: false,
+      saved: false,
+      ...job
+    };
+
+    // Only fetch featured jobs if we successfully got the main job
+    let featuredJobs = [];
+    try {
+      const featuredRes = await fetch(`${API_BASE_URL}jobs/search/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: "",
+          page: 1,
+          page_size: 4,
+          category: [],
+          salaryRange: [],
+          experienceLevel: [],
+          jobType: [],
+        }),
+      });
+
+      if (featuredRes.ok) {
+        const featuredData = await featuredRes.json();
+        featuredJobs = featuredData.results || [];
+      }
+    } catch (error) {
+      console.error('Error fetching featured jobs:', error);
+    }
 
     return {
       props: {
-        job,
-        featuredJobs: featuredJobs.results || [],
-        token, // Pass the token to the component
+        job: jobWithDefaults,
+        featuredJobs,
+        token,
       },
     };
   } catch (error) {
-    console.error('Error fetching job details:', error);
-
+    console.error('Error in getServerSideProps:', error);
+    
     return {
-      props: {
-        job: null,
-        featuredJobs: [],
-        token: null,
-      },
+      notFound: true
     };
   }
 }

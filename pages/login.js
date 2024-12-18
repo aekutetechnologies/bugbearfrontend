@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout/Layout";
 import Link from "next/link";
-import {ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import API_BASE_URL from "../util/config";
@@ -16,6 +16,7 @@ export default function Signin() {
         password: '',
     });
     const [error, setError] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,24 +47,22 @@ export default function Signin() {
                 localStorage.setItem('userType', data.user_type);
                 Cookies.set('accessToken', data.token.access, { expires: 1 });
 
-                // toast.success(data.msg || "Login successful!");
-
                 // Redirect to dashboard or another protected page
                 if (data.user_type === 3) {
-                    router.push('/dashboard');  // Redirect to dashboard if userType is 3
+                    router.push('/dashboard');  
                     toast.success(data.msg || "Login successful!");
                 } else {
-                    router.push('/jobs-list');  // Redirect to jobs-list for other userTypes
+                    router.push('/jobs-list');  
                     toast.success(data.msg || "Login successful!");
                 }
             } else {
                 const errorData = await res.json();
-                toast.error(errorData.detail || "Login failed");
-                setError(errorData.detail || "Login failed");
+                setError(errorData.msg || "Login failed");
+                toast.error(errorData.msg || "Login failed");
             }
         } catch (err) {
-            toast.error("Something went wrong. Please try again later.");
             setError("Something went wrong. Please try again later.");
+            toast.error("Something went wrong. Please try again later.");
         }
     };
 
@@ -75,16 +74,11 @@ export default function Signin() {
                         <div className="row login-register-cover">
                             <div className="col-lg-4 col-md-6 col-sm-12 mx-auto">
                                 <div className="text-center">
-                                    <p className="font-sm text-brand-2">Welcome back! </p>
+                                    <p className="font-sm text-brand-2">Welcome back!</p>
                                     <h2 className="mt-10 mb-5 text-brand-1">Member Login</h2>
-                                    <p className="font-sm text-muted mb-30">Access to all features. No credit card required.</p>
-                                    {/* <button className="btn social-login hover-up mb-20">
-                                        <img src="assets/imgs/template/icons/icon-google.svg" alt="bugbear" />
-                                        <strong>Sign in with Google</strong>
-                                    </button>
-                                    <div className="divider-text-center">
-                                        <span>Or continue with</span>
-                                    </div> */}
+                                    <p className="font-sm text-muted mb-30">
+                                        Access to all features. No credit card required.
+                                    </p>
                                 </div>
                                 <form className="login-register text-start mt-20" onSubmit={handleSubmit}>
                                     <div className="form-group">
@@ -106,34 +100,44 @@ export default function Signin() {
                                         <label className="form-label" htmlFor="input-4">
                                             Password *
                                         </label>
-                                        <input
-                                            className="form-control"
-                                            id="input-4"
-                                            type="password"
-                                            name="password"
-                                            placeholder="************"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            required
-                                        />
+                                        <div className="position-relative">
+                                            <input
+                                                className="form-control"
+                                                id="input-4"
+                                                type={showPassword ? "text" : "password"} // Dynamically switch between "text" and "password"
+                                                name="password"
+                                                placeholder="************"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                className="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+                                                onClick={() => setShowPassword(!showPassword)} // Toggle showPassword state
+                                                style={{ textDecoration: "none" }}
+                                            >
+                                                {showPassword ? "Hide" : "Show"} {/* Display "Hide" or "Show" */}
+                                            </button>
+                                        </div>
                                     </div>
+
                                     <div className="login_footer form-group d-flex justify-content-between">
-                                        <label className="cb-container">
-                                            <input type="checkbox" />
-                                            <span className="text-small">Remember me</span>
-                                            <span className="checkmark" />
-                                        </label>
                                         <Link legacyBehavior href="/page-reset-password">
                                             <a className="text-muted">Forgot Password</a>
                                         </Link>
                                     </div>
                                     <div className="form-group">
-                                        <button className="btn btn-brand-1 hover-up w-100" type="submit">
+                                        <button
+                                            className="btn btn-brand-1 hover-up w-100"
+                                            type="submit"
+                                            disabled={!formData.email || !formData.password} // Prevent submission if fields are empty
+                                        >
                                             Login
                                         </button>
                                     </div>
                                     <div className="text-muted text-center">
-                                        Don't have an Account?
+                                        Don't have an Account?{" "}
                                         <Link legacyBehavior href="/choose-role">
                                             <a>Sign up</a>
                                         </Link>
@@ -141,7 +145,11 @@ export default function Signin() {
                                 </form>
                             </div>
                             <div className="img-1 d-none d-lg-block">
-                                <img className="shape-1" src="assets/imgs/page/login-register/img-4.svg" alt="bugbear" />
+                                <img
+                                    className="shape-1"
+                                    src="assets/imgs/page/login-register/img-4.svg"
+                                    alt="bugbear"
+                                />
                             </div>
                             <div className="img-2">
                                 <img src="assets/imgs/page/login-register/img-3.svg" alt="bugbear" />
@@ -149,11 +157,17 @@ export default function Signin() {
                         </div>
                     </div>
                 </section>
-                <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-
-                {/* <div>
-                    <button className="bg-blue-300 p-3" onClick={() => toast.success("Clicked")}>click</button>
-                </div> */}
+                <ToastContainer 
+                    position="top-right" 
+                    autoClose={3000} 
+                    hideProgressBar={false} 
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
             </Layout>
         </>
     );

@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Navigation, Pagination, Autoplay } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import API_BASE_URL from "../../util/config";
+
+SwiperCore.use([Navigation, Pagination, Autoplay]);
 
 const CategorySlider = () => {
     const [categories, setCategories] = useState([]);
-    const [currentSlide, setCurrentSlide] = useState(0);
-    const slidesToShow = 5; // Number of slides to show at once
 
     // Fetch data from backend API
     useEffect(() => {
@@ -22,69 +27,90 @@ const CategorySlider = () => {
         fetchCategories();
     }, []);
 
-    // Calculate the total number of slides
-    const totalSlides = Math.ceil(categories.length / slidesToShow);
-
-    // Move to the next slide
-    const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % totalSlides);
-    };
-
-    // Move to the previous slide
-    const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-    };
-
     return (
         <div className="relative py-10">
-            <div className="overflow-hidden px-3">
-                <div
-                    className="flex transition-transform duration-500"
-                    style={{ transform: `translateX(-${currentSlide * (100 / slidesToShow)}%)` }}
-                >
-                    {categories.map((item, i) => (
-                        <div
-                            key={i}
-                            className="flex-shrink-0 w-full md:w-1/3 lg:w-1/5 p-2"
-                        >
-                            <div className="bg-white rounded-lg p-4 mx-4 flex items-center justify-center h-52 shadow-md shadow-blue-200 hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
-                                <Link href={`/jobs-list?category=${encodeURIComponent(item.name)}`}>
-                                    <div className="flex flex-col items-center">
-                                        <div className="mb-3">
-                                            <img
-                                                alt="category"
-                                                className="w-12 h-12"
-                                                src="assets/imgs/page/homepage1/lightning.svg"
-                                            />
-                                        </div>
-                                        <div className="text-center">
-                                            <h4 className="text-lg font-semibold truncate max-w-[150px]">
-                                                {item.name}
-                                            </h4>
-                                            <p className="text-sm text-gray-500">
-                                                {item.job_count} <span>Jobs Available</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Navigation buttons */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-400 transition duration-200 ease-in-out"
+            <Swiper
+                slidesPerView={5} // Number of slides shown at once
+                spaceBetween={20} // Space between slides
+                navigation={{
+                    prevEl: ".swiper-button-prev",
+                    nextEl: ".swiper-button-next",
+                }}
+                pagination={{ clickable: true }}
+                autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                }}
+                breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 10 },
+                    640: { slidesPerView: 2, spaceBetween: 15 },
+                    1024: { slidesPerView: 4, spaceBetween: 20 },
+                    1440: { slidesPerView: 5, spaceBetween: 30 },
+                }}
             >
-                <span className="text-white text-lg font-bold">&lt;</span>
+                {categories.map((item, i) => (
+                    <SwiperSlide key={i}>
+                        <div className="bg-white rounded-lg p-4 mx-4 flex items-center justify-center h-52 shadow-md shadow-blue-200 hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
+                            <Link href={`/jobs-list?category=${encodeURIComponent(item.name)}`}>
+                                <div className="flex flex-col items-center">
+                                    <div className="mb-3">
+                                        <img
+                                            alt="category"
+                                            className="w-12 h-12"
+                                            src="assets/imgs/page/homepage1/lightning.svg"
+                                        />
+                                    </div>
+                                    <div className="text-center">
+                                        <h4 className="text-lg font-semibold truncate max-w-[150px]">
+                                            {item.name}
+                                        </h4>
+                                        <p className="text-sm text-gray-500">
+                                            {item.job_count} <span>Jobs Available</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+
+            {/* Swiper Navigation Buttons */}
+            <button
+                className="swiper-button-prev absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-transparent border border-gray-300 rounded-full hover:scale-110 transition duration-200 ease-in-out"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-gray-700"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 19.5L8.25 12l7.5-7.5"
+                    />
+                </svg>
             </button>
             <button
-                onClick={nextSlide}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-400 transition duration-200 ease-in-out"
+                className="swiper-button-next absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-transparent border border-gray-300 rounded-full hover:scale-110 transition duration-200 ease-in-out"
             >
-                <span className="text-white text-lg font-bold">&gt;</span>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-gray-700"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                </svg>
             </button>
         </div>
     );

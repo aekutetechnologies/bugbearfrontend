@@ -145,34 +145,48 @@ export default function JobGrid() {
                                                                     <a className="text-lg font-semibold hover:text-blue-600 transition-colors duration-200">{job.company_name}</a>
                                                                 </Link>
                                                                 <span className="text-sm text-gray-500">{job.location}</span>
-                                                                
                                                             </div>
                                                         </div>
                                                         <div className="p-4 border-t border-gray-200">
-                                                            <h6>
+                                                            <h6 className="text-xl font-bold mb-2">
                                                                 <Link href={`/job-details/${job.id}`} legacyBehavior>
-                                                                    <a className="font-medium text-lg hover:text-blue-600 transition-colors duration-200">{job.title}</a>
+                                                                    <a className="hover:text-blue-600 transition-colors duration-200">
+                                                                        {job.job_title.length > 17
+                                                                            ? `${job.job_title.substring(0, 17)}...`
+                                                                            : job.job_title}
+                                                                    </a>
                                                                 </Link>
                                                             </h6>
                                                             <div className="mt-2 flex items-center justify-between text-sm text-gray-600">
                                                                 <span>{job.job_type}</span>
                                                                 <span>{job.posted_time}</span>
                                                             </div>
-                                                            {/* <p className="text-sm text-gray-600 mt-2">{job.description}</p> */}
                                                             <div className="mt-4 flex justify-between items-center">
                                                                 <span className="text-lg font-bold">{formatSalary(job.salary_min)} - {formatSalary(job.salary_max)}</span>
                                                                 <button
                                                                     className="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                                                     onClick={() => handleApplyNowClick(job.id)}
                                                                 >
-                                                                    Apply now
+                                                                    Applied
                                                                 </button>
+                                                            </div>
+                                                            {/* Approval Status Section */}
+                                                            <div className="mt-4">
+                                                                <span className="text-sm font-medium">Approval Status:</span>
+                                                                {job.is_approved ? (
+                                                                    <span className="ml-2 text-green-500 font-bold">Approved</span>
+                                                                ) : (
+                                                                    <span className="ml-2 text-red-500 font-bold">Not Approved</span>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
+
+
+
 
                                     </div>
 

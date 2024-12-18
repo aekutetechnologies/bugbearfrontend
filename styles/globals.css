@@ -141,3 +141,33 @@
 .modal-content a:hover {
   text-decoration: underline;
 }
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pager button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pager button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pager button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pager-number {
+  font-weight: bold;
+  margin: 0 1rem;
+}

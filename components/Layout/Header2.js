@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -6,15 +5,26 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 
-const AuthButtons = dynamic(() => import("../elements/AuthButtons"), {
-  ssr: false,
-});
+const AuthButtons = dynamic(() => import("../elements/AuthButtons"), { ssr: false });
 
 const Header2 = () => {
   const [scroll, setScroll] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    // Check authentication status on component mount
+    const checkAuthStatus = () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem("accessToken") : null;
+      const userType = typeof window !== 'undefined' ? localStorage.getItem("userType") : null;
+      
+      setIsAuthenticated(!!token && !!userType);
+    };
+
+    // Check initial auth status
+    checkAuthStatus();
+
+    // Handle scroll effect
     const handleScroll = () => {
       const scrollCheck = window.scrollY > 100;
       if (scrollCheck !== scroll) {
@@ -22,67 +32,71 @@ const Header2 = () => {
       }
     };
 
+    // Add scroll event listener
     if (typeof window !== "undefined") {
       window.addEventListener("scroll", handleScroll);
+      
+      // Add event listener for storage changes
+      window.addEventListener('storage', checkAuthStatus);
     }
 
+    // Cleanup
     return () => {
       if (typeof window !== "undefined") {
         window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener('storage', checkAuthStatus);
       }
     };
   }, [scroll]);
 
   // Handle logo click based on token availability
   const handleLogoClick = () => {
-    const token = localStorage.getItem("accessToken"); // Fetch token from localStorage
-    const userType = localStorage.getItem("userType"); // Fetch userType from localStorage
+    const token = localStorage.getItem("accessToken");
+    const userType = localStorage.getItem("userType");
 
     if (token && userType === "3") {
-      router.push("/dashboard/"); // Redirect to dashboard if userType is 3
+      router.push("/dashboard/");
     } else if (token && (userType === "1" || userType === "2")) {
-      router.push("/jobs-list/"); // Redirect to jobs-list if userType is 1 or 2
+      router.push("/jobs-list/");
     } else {
-      router.push("/"); // Redirect to home if token is not available or userType is other
+      router.push("/");
     }
   };
 
   return (
-    <header
-      className={scroll ? "sticky-bar stick py-3 top-2" : "sticky-bar py-3"}
-    >
-      <div
+    <header className={scroll ? "sticky-bar stick py-3 top-2" : "sticky-bar py-3"}>
+      <div 
         className={
-          scroll
-            ? "bg-neutral-500 bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-40 backdrop-saturate-100 backdrop-contrast-125 py-2 mx-auto max-w-[1260px] flex justify-between rounded-xl top-2 shadow-lg shadow-sky-200"
+          scroll 
+            ? "bg-neutral-500 bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-40 backdrop-saturate-100 backdrop-contrast-125 py-2 mx-auto max-w-[1260px] flex justify-between rounded-xl top-2 shadow-lg shadow-sky-200" 
             : "py-2 flex justify-between"
         }
       >
         <div>
-          <div
-            onClick={handleLogoClick}
+          <div 
+            onClick={handleLogoClick} 
             className="cursor-pointer d-flex items-center"
           >
-            <img
-              className="w-44"
-              alt="bugbear"
-              src="/assets/imgs/template/jobhub-logo.svg"
+            <img 
+              className="w-44" 
+              alt="bugbear" 
+              src="/assets/imgs/template/jobhub-logo.svg" 
             />
           </div>
         </div>
-
         <div className="lg:flex items-center gap-3">
-          <AuthButtons />
+          {isAuthenticated ? (
+            <AuthButtons />
+          ) : null}
         </div>
-
         <div className="flex lg:hidden items-center">
           <RxHamburgerMenu size={35} />
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
+      <ToastContainer 
+        position="top-right" 
+        autoClose={3000} 
+        hideProgressBar={false} 
       />
     </header>
   );

@@ -138,6 +138,33 @@ export default function CandidateProfile() {
         fetchSavedJobs();
     }, []);
 
+    // Handle the "Delete Account" button click
+    const handleDeleteAccount = async () => {
+        const confirmation = window.confirm("Are you sure you want to delete your account?");
+        if (!confirmation) return;
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            const response = await fetch(`${API_BASE_URL}user/delete`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                toast.success("Account deleted successfully!");
+                localStorage.removeItem("accessToken"); // Clear the token from localStorage
+                router.push("/"); // Redirect to the homepage or login
+            } else {
+                toast.error("Failed to delete account. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            toast.error("An error occurred while deleting the account.");
+        }
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setProfileData((prevData) => ({
@@ -241,7 +268,7 @@ export default function CandidateProfile() {
                         <div className="container">
                             <div className="banner-hero banner-image-single">
                                 <img src="assets/imgs/page/candidates/img.png" alt="bugbear" />
-                                <a className="btn-editor" href="#" />
+                                {/* <a className="btn-editor" href="#" /> */}
                             </div>
                             <div className="box-company-profile">
                                 <div className="image-compay">
@@ -292,7 +319,7 @@ export default function CandidateProfile() {
                                         <div className="border-bottom pt-10 pb-10" />
                                         <div className="mt-20 mb-20">
                                             <Link href="#">
-                                                <button className="link-red">Delete Account</button>
+                                                <button className="link-red" onClick={handleDeleteAccount}>Delete Account</button>
                                             </Link>
                                         </div>
                                     </div>
