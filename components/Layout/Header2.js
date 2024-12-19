@@ -85,9 +85,7 @@ const Header2 = () => {
           </div>
         </div>
         <div className="lg:flex items-center gap-3">
-          {isAuthenticated ? (
-            <AuthButtons />
-          ) : null}
+          <AuthButtons />
         </div>
         <div className="flex lg:hidden items-center">
           <RxHamburgerMenu size={35} />
