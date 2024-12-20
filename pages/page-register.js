@@ -272,9 +272,9 @@ export default function Register() {
                                         </span>
                                         <span className="checkmark" />
                                     </label>
-                                    <Link href="/page-contact">
+                                    {/* <Link href="/page-contact">
                                         <span className="text-muted">Learn more</span>
-                                    </Link>
+                                    </Link> */}
                                 </div>
                                 <div className="form-group">
                                     <button
