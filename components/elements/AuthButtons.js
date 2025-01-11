@@ -194,7 +194,7 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
 
   return (
     <div className="flex items-center space-x-2 md:space-x-4">
-      <div className="hidden md:block">
+      <div className="md:block">
         <NavigationLinks isMobileView={false} />
       </div>
       
@@ -208,7 +208,7 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
             alt="Profile"
             className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
           />
-          <span className="hidden md:inline text-gray-700">
+          <span className="md:inline text-gray-700">
             Hi, {profileData?.first_name || "User"}
           </span>
           <FaChevronDown className="w-4 h-4 text-gray-500" />
@@ -216,7 +216,7 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
 
         {dropdownOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
-            <div className="md:hidden px-4 py-2 border-b">
+            <div className="px-4 py-2 border-b">
               <NavigationLinks isMobileView={true} />
             </div>
             <button

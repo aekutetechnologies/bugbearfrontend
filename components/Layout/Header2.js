@@ -81,7 +81,7 @@ const Header2 = () => {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:block">
+          <div className="lg:block">
             <AuthButtons isMobile={false} />
           </div>
 
