@@ -1,9 +1,9 @@
 ﻿/* eslint-disable @next/next/no-img-element */
 import Layout from "../components/Layout/Layout";
-import CategorySlider from "./../components/sliders/Category";
-import TopRekruterSlider from "./../components/sliders/TopRekruter";
-import BlogSlider from "./../components/sliders/Blog";
-import CategoryTab from "./../components/elements/CategoryTab";
+import CategorySlider from "../components/sliders/Category";
+import TopRekruterSlider from "../components/sliders/TopRekruter";
+import BlogSlider from "../components/sliders/Blog";
+import CategoryTab from "../components/elements/CategoryTab";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -29,7 +29,7 @@ export default function Home() {
     const handleSubscribe = async (e) => {
         e.preventDefault();
 
-        try{
+        try {
             const res = await fetch(`${API_BASE_URL}user/send-subscribe/`, {
                 method: "POST",
                 headers: {
@@ -44,8 +44,7 @@ export default function Home() {
                     setShowPopup(false);
                 }, 3000);
             }
-        }
-        catch(error){
+        } catch (error) {
             console.log(error);
         }
     };
@@ -55,119 +54,122 @@ export default function Home() {
             <Layout>
                 {/* Hero Section */}
                 <section className="section-box">
-    <div className="container mx-auto">
-        <div className="banner-hero hero-1">
-            <div className="banner-inner">
-                <div className="row">
-                    <div className="col-xl-8 col-lg-12">
-                        <div className="block-banner">
-                            <h1 className="heading-banner wow animate__animated animate__fadeInUp">
-                                The <span className="color-brand-2">Easiest Way</span>
-                                <br className="d-none d-lg-block" />
-                                to Get Your New Job
-                            </h1>
-                            <div
-                                className="banner-description mt-20 wow animate__animated animate__fadeInUp"
-                                data-wow-delay=".1s"
-                            >
-                                Each month, more than 3 million job seekers turn to <br className="d-none d-lg-block" />
-                                website in their search for work, making over 140,000 <br className="d-none d-lg-block" />
-                                applications every single day
-                            </div>
-                            <div
-                                className="form-find mt-40 wow animate__animated animate__fadeIn"
-                                data-wow-delay=".2s"
-                            >
-                                <form onSubmit={handleSearch}>
-                                    <input
-                                        className="form-input input-keysearch mr-10"
-                                        type="text"
-                                        placeholder="Your keyword..."
-                                        value={keyword}
-                                        onChange={(e) => setKeyword(e.target.value)}
-                                    />
-                                    <button className="btn btn-default btn-find font-sm" type="submit">
-                                        Search
-                                    </button>
-                                </form>
-                            </div>
-                            <div
-                                className="list-tags-banner mt-60 wow animate__animated animate__fadeInUp"
-                                data-wow-delay=".3s"
-                            >
-                                <strong>Popular Searches:</strong>
-                                <Link href={{ pathname: '/jobs-list', query: { category: 'devsecops' } }}>
-                                    devsecops,
-                                </Link>
-                                <Link href={{ pathname: '/jobs-list', query: { category: 'vpat' } }}>
-                                    vpat,
-                                </Link>
-                                <Link href={{ pathname: '/jobs-list', query: { category: 'network-security' } }}>
-                                    network security,
-                                </Link>
-                                <Link href={{ pathname: '/jobs-list', query: { category: 'webproxy' } }}>
-                                    webproxy,
-                                </Link>
-                                <Link href={{ pathname: '/jobs-list', query: { category: 'socaas' } }}>
-                                    socaas,
-                                </Link>
+                    <div className="container mx-auto">
+                        <div className="banner-hero hero-1">
+                            <div className="banner-inner">
+                                <div className="row">
+                                    <div className="col-xl-8 col-lg-12">
+                                        <div className="block-banner">
+                                            <h1 className="heading-banner wow animate__animated animate__fadeInUp">
+                                                The <span className="color-brand-2">Easiest Way</span>
+                                                <br className="d-none d-lg-block" />
+                                                to Get Your New Job
+                                            </h1>
+                                            <div
+                                                className="banner-description mt-20 wow animate__animated animate__fadeInUp"
+                                                data-wow-delay=".1s"
+                                            >
+                                                Each month, more than 3 million job seekers turn to <br className="d-none d-lg-block" />
+                                                website in their search for work, making over 140,000 <br className="d-none d-lg-block" />
+                                                applications every single day
+                                            </div>
+                                            <div
+                                                className="form-find mt-40 wow animate__animated animate__fadeIn"
+                                                data-wow-delay=".2s"
+                                            >
+                                                <form onSubmit={handleSearch}>
+                                                    <input
+                                                        className="form-input input-keysearch mr-10"
+                                                        type="text"
+                                                        placeholder="Your keyword..."
+                                                        value={keyword}
+                                                        onChange={(e) => setKeyword(e.target.value)}
+                                                    />
+                                                    <button className="btn btn-default btn-find font-sm" type="submit">
+                                                        Search
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div
+                                                className="list-tags-banner mt-60 wow animate__animated animate__fadeInUp"
+                                                data-wow-delay=".3s"
+                                            >
+                                                <strong>Popular Searches:</strong>
+                                                <Link href={{ pathname: '/jobs-list', query: { category: 'devsecops' } }}>
+                                                    devsecops,
+                                                </Link>
+                                                <Link href={{ pathname: '/jobs-list', query: { category: 'vpat' } }}>
+                                                    vpat,
+                                                </Link>
+                                                <Link href={{ pathname: '/jobs-list', query: { category: 'network-security' } }}>
+                                                    network security,
+                                                </Link>
+                                                <Link href={{ pathname: '/jobs-list', query: { category: 'webproxy' } }}>
+                                                    webproxy,
+                                                </Link>
+                                                <Link href={{ pathname: '/jobs-list', query: { category: 'socaas' } }}>
+                                                    socaas,
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-xl-4 col-lg-12 d-none d-xl-block col-md-6">
+                                        <div className="banner-imgs">
+                                            <div className="block-1 shape-1">
+                                                <img
+                                                    className="img-responsive"
+                                                    alt="bugbear"
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "auto",
+                                                        borderLeft: "10px solid #3457D5",
+                                                        borderBottom: "10px solid #3457D5",
+                                                        borderTopLeftRadius: "40px",
+                                                        borderTopRightRadius: "40px",
+                                                        borderBottomRightRadius: "80px",
+                                                    }}
+                                                    src="assets/imgs/page/homepage1/nbanner1.jpeg"
+                                                />
+                                            </div>
+                                            <div className="block-2 shape-2">
+                                                <img
+                                                    className="img-responsive"
+                                                    alt="bugbear"
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "auto",
+                                                        borderLeft: "5px solid #3457D5",
+                                                        borderBottom: "5px solid #3457D5",
+                                                        borderTopLeftRadius: "30px",
+                                                        borderTopRightRadius: "30px",
+                                                        borderBottomRightRadius: "80px",
+                                                    }}
+                                                    src="assets/imgs/page/homepage1/nbanner2.jpeg"
+                                                />
+                                            </div>
+                                            <div className="block-3 shape-3">
+                                                <img
+                                                    className="img-responsive"
+                                                    alt="bugbear"
+                                                    src="assets/imgs/page/homepage1/icon-top-banner.png"
+                                                    style={{ width: "100%", height: "auto" }}
+                                                />
+                                            </div>
+                                            <div className="block-4 shape-3">
+                                                <img
+                                                    className="img-responsive"
+                                                    alt="bugbear"
+                                                    src="assets/imgs/page/homepage1/icon-bottom-banner.png"
+                                                    style={{ width: "100%", height: "auto" }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-4 col-lg-12 d-none d-xl-block col-md-6">
-                        <div className="banner-imgs">
-                            <div className="block-1 shape-1">
-                                <img
-                                    className="img-responsive"
-                                    alt="bugbear"
-                                    style={{
-                                        width: "400px",
-                                        height: "260px",
-                                        borderLeft: "10px solid #3457D5",
-                                        borderBottom: "10px solid #3457D5",
-                                        borderTopLeftRadius: "40px",
-                                        borderTopRightRadius: "40px",
-                                        borderBottomRightRadius: "80px",
-                                    }}
-                                    src="assets/imgs/page/homepage1/nbanner1.jpeg"
-                                />
-                            </div>
-                            <div className="block-2 shape-2">
-                                <img
-                                    className="img-responsive"
-                                    alt="bugbear"
-                                    style={{
-                                        borderLeft: "5px solid #3457D5",
-                                        borderBottom: "5px solid #3457D5",
-                                        borderTopLeftRadius: "30px",
-                                        borderTopRightRadius: "30px",
-                                        borderBottomRightRadius: "80px",
-                                    }}
-                                    src="assets/imgs/page/homepage1/nbanner2.jpeg"
-                                />
-                            </div>
-                            <div className="block-3 shape-3">
-                                <img
-                                    className="img-responsive"
-                                    alt="bugbear"
-                                    src="assets/imgs/page/homepage1/icon-top-banner.png"
-                                />
-                            </div>
-                            <div className="block-4 shape-3">
-                                <img
-                                    className="img-responsive"
-                                    alt="bugbear"
-                                    src="assets/imgs/page/homepage1/icon-bottom-banner.png"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
+                </section>
 
                 {/* Category Slider */}
                 <section className="mt-20">
@@ -206,9 +208,9 @@ export default function Home() {
                                     data-bs-toggle="modal"
                                     data-bs-target="#ModalApplyJobForm"
                                 >
-                                <Link href="/login" passHref>
+                                    <Link href="/login" passHref>
                                         Apply Now
-                                </Link>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -317,10 +319,7 @@ export default function Home() {
                                         <br /> Update Regularly
                                     </h2>
                                     <div className="box-form-newsletter mt-40">
-                                        <form
-                                            className="form-newsletter"
-                                            onSubmit={handleSubscribe}
-                                        >
+                                        <form className="form-newsletter" onSubmit={handleSubscribe}>
                                             <input
                                                 className="input-newsletter"
                                                 placeholder="Enter your email here"
@@ -329,10 +328,7 @@ export default function Home() {
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 required
                                             />
-                                            <button
-                                                type="submit"
-                                                className="btn btn-default font-heading icon-send-letter"
-                                            >
+                                            <button type="submit" className="btn btn-default font-heading icon-send-letter">
                                                 Subscribe
                                             </button>
                                         </form>
@@ -383,6 +379,31 @@ export default function Home() {
                         border-radius: 8px;
                         text-align: center;
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                    }
+
+                    /* Responsive Styles */
+                    @media only screen and (max-width: 768px) {
+                        .banner-hero .banner-imgs {
+                            display: none;
+                        }
+                        .banner-hero .block-banner {
+                            text-align: center;
+                        }
+                        .banner-hero .heading-banner {
+                            font-size: 2.5rem;
+                        }
+                        .banner-hero .banner-description {
+                            font-size: 0.9rem;
+                        }
+                        .list-tags-banner {
+                            font-size: 0.9rem;
+                        }
+                    }
+
+                    @media only screen and (max-width: 1024px) {
+                        .banner-hero .banner-imgs {
+                            display: none;
+                        }
                     }
                 `}</style>
             </Layout>

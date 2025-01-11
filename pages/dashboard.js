@@ -1,4 +1,3 @@
-1/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Line } from "react-chartjs-2";
@@ -9,6 +8,7 @@ import Layout from "../components/Layout/Layout";
 import JobStats from "../components/elements/JobStats";
 import VdiStats from "../components/elements/VdiStats";
 import API_BASE_URL from "../util/config";
+
 // Register chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -105,6 +105,7 @@ export default function DashboardWithSidebar() {
         }
     };
 
+    // Function to handle file upload for bulk jobs
     const handleFileUpload = async () => {
         if (!excelFile) {
             alert("Please select a file to upload.");
@@ -180,103 +181,90 @@ export default function DashboardWithSidebar() {
             });
     };
 
-
     return (
         <Layout>
-            <div className="">
-                <div className="">
-                    <main className="py-3">
-                        <div className="dashboard-header">
-                            <h3 className="dashboard-title">Dashboard</h3>
-                            <div style={{ display: "flex", gap: "20px" }}>
-                                <Link href="/create-job" className="">
-                                    {/* <button className="px-4 py-2 rounded bg-blue-600 text-white text-lg">Create Job</button> */}
-                                    <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-black shadow-xl hover:-translate-y-1 transition-transorm ">Create Job</button>
-                                </Link>
+            <div className="px-4 py-6 md:px-0 md:py-0">
+                <main className="py-3">
+                    <div className="dashboard-header">
+                        <h3 className="dashboard-title text-center md:text-left">Dashboard</h3>
+                        <div className="flex flex-col md:flex-row items-center md:items-start md:gap-4 mt-4">
+                            <Link href="/create-job">
+                                <button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 shadow-xl hover:-translate-y-1 transition-transform mb-2 md:mb-0">
+                                    Create Job
+                                </button>
+                            </Link>
                             <button
-                                className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 shadow-xl hover:-translate-y-1 transition-transform"
+                                className="px-4 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 shadow-xl hover:-translate-y-1 transition-transform"
                                 onClick={() => setShowBulkJobModal(true)}
                             >
                                 Add Bulk Job
                             </button>
-                                {/* <button className="px-3 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 hover:text-gray-200 shadow-xl hover:-translate-y-1 transition-transorm " onClick={() => setShowModal(true)}>
-                                    Create VDI
-                                </button> */}
-                            </div>
+                            {/* <button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-lg hover:bg-blue-700 shadow-xl hover:-translate-y-1 transition-transform" onClick={() => setShowModal(true)}>
+                                Create VDI
+                            </button> */}
                         </div>
+                    </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-0">
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-jobs?status=all")}
-                                >
-                                    <h3 className="text-lg font-semibold">Total Jobs</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.total_jobs}</p>
-                                    {/* <span className="text-green-600">+25%</span> */}
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-jobs?status=open")}
-                                >
-                                    <h3 className="text-lg font-semibold">Open Jobs</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.open_jobs}</p>
-                                    {/* <span className="text-green-600">+5%</span> */}
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-jobs?status=closed")}
-                                >
-                                    <h3 className="text-lg font-semibold">Closed Jobs</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.closed_jobs}</p>
-                                    {/* <span className="text-green-600">+12%</span> */}
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-vdi?status=all")}
-                                >
-                                    <h3 className="text-lg font-semibold">Total VDI</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.total_vdi}</p>
-                                    {/* <span className="text-green-600">+10%</span> */}
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-vdi?status=running")}
-                                >
-                                    <h3 className="text-lg font-semibold">Running VDI</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.running_vdi}</p>
-                                    {/* <span className="text-green-600">+8%</span> */}
-                                </div>
-                                <div
-                                    className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
-                                    onClick={() => router.push("/admin-vdi?status=closed")}
-                                >
-                                    <h3 className="text-lg font-semibold">Closed VDI</h3>
-                                    <p className="text-2xl font-bold text-gray-800">{stats.closed_vdi}</p>
-                                    {/* <span className="text-green-600">+15%</span> */}
-                                </div>
-                            </div>
-
-                        {/* graph */}
-                        <div className="p-6 flex gap-0 mx-0">
-                            <div className="w-1/2 p-4 bg-white shadow-md shadow-blue-200 rounded-lg">
-                                <h3 className="text-lg font-semibold mb-4 text-gray-800">Jobs Created Over the Week</h3>
-                                <JobStats
-                                    openJobs={stats.open_jobs}
-                                    closedJobs={stats.closed_jobs}
-                                />
-                            </div>
-                            <div className="w-1/2 p-4 bg-white shadow-md shadow-blue-200 rounded-lg">
-                                <h3 className="text-lg font-semibold mb-4 text-gray-800">VDIs Created Over the Week</h3>
-                                <VdiStats
-                                    runningvdi={5}
-                                    closedvdi={4}
-                                />
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                        <div
+                            className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => router.push("/admin-jobs?status=all")}
+                        >
+                            <h3 className="text-lg font-semibold">Total Jobs</h3>
+                            <p className="text-2xl font-bold text-gray-800">{stats.total_jobs}</p>
                         </div>
-                    </main>
-                </div>
+                        <div
+                            className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => router.push("/admin-jobs?status=open")}
+                        >
+                            <h3 className="text-lg font-semibold">Open Jobs</h3>
+                            <p className="text-2xl font-bold text-gray-800">{stats.open_jobs}</p>
+                        </div>
+                        <div
+                            className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => router.push("/admin-jobs?status=closed")}
+                        >
+                            <h3 className="text-lg font-semibold">Closed Jobs</h3>
+                            <p className="text-2xl font-bold text-gray-800">{stats.closed_jobs}</p>
+                        </div>
+                        <div
+                            className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => router.push("/admin-vdi?status=all")}
+                        >
+                            <h3 className="text-lg font-semibold">Total VDI</h3>
+                            <p className="text-2xl font-bold text-gray-800">{stats.total_vdi}</p>
+                        </div>
+                        <div
+                            className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => router.push("/admin-vdi?status=running")}
+                        >
+                            <h3 className="text-lg font-semibold">Running VDI</h3>
+                            <p className="text-2xl font-bold text-gray-800">{stats.running_vdi}</p>
+                        </div>
+                        <div
+                            className="bg-white shadow-md shadow-blue-200 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                            onClick={() => router.push("/admin-vdi?status=closed")}
+                        >
+                            <h3 className="text-lg font-semibold">Closed VDI</h3>
+                            <p className="text-2xl font-bold text-gray-800">{stats.closed_vdi}</p>
+                        </div>
+                    </div>
+
+                    {/* Graphs */}
+                    <div className="p-4 md:flex gap-4">
+                        <div className="w-full md:w-1/2 bg-white shadow-md shadow-blue-200 rounded-lg mb-4 md:mb-0">
+                            <h3 className="text-lg font-semibold mb-4 text-gray-800 text-center md:text-left">Jobs Created Over the Week</h3>
+                            <JobStats openJobs={stats.open_jobs} closedJobs={stats.closed_jobs} />
+                        </div>
+                        <div className="w-full md:w-1/2 bg-white shadow-md shadow-blue-200 rounded-lg">
+                            <h3 className="text-lg font-semibold mb-4 text-gray-800 text-center md:text-left">VDIs Created Over the Week</h3>
+                            <VdiStats runningvdi={5} closedvdi={4} />
+                        </div>
+                    </div>
+                </main>
             </div>
 
+            {/* Modal for creating VDI */}
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div className="bg-white w-full max-w-md mx-auto p-6 rounded-lg shadow-lg">
@@ -296,7 +284,9 @@ export default function DashboardWithSidebar() {
                                 Cancel
                             </button>
                             <button
-                                className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${isCreatingVDI ? 'cursor-not-allowed opacity-50' : ''}`}
+                                className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${
+                                    isCreatingVDI ? "cursor-not-allowed opacity-50" : ""
+                                }`}
                                 onClick={handleCreateVDI}
                                 disabled={isCreatingVDI}
                             >
@@ -307,46 +297,45 @@ export default function DashboardWithSidebar() {
                 </div>
             )}
 
-            {/* Bulk Job Modal */}
+            {/* Modal for bulk job upload */}
             {showBulkJobModal && (
-                        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                            <div className="bg-white w-full max-w-md mx-auto p-6 rounded-lg shadow-lg">
-                                <h3 className="text-xl font-bold mb-4">Upload Bulk Jobs</h3>
-                                <input
-                                    type="file"
-                                    accept=".xlsx"
-                                    onChange={(e) => setExcelFile(e.target.files[0])}
-                                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-                                />
-                                <div className="flex justify-between items-center mb-4">
-                                    <a
-                                        onClick={handleDownloadSampleFile}
-                                        className="text-blue-500 hover:underline cursor-pointer"
-                                    >
-                                        Download Sample File
-                                    </a>
-                                </div>
-                                <div className="flex justify-end space-x-4">
-                                    <button
-                                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                                        onClick={() => setShowBulkJobModal(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${
-                                            isUploading ? "cursor-not-allowed opacity-50" : ""
-                                        }`}
-                                        onClick={handleFileUpload}
-                                        disabled={isUploading}
-                                    >
-                                        {isUploading ? "Uploading..." : "Upload"}
-                                    </button>
-                                </div>
-                            </div>
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div className="bg-white w-full max-w-md mx-auto p-6 rounded-lg shadow-lg">
+                        <h3 className="text-xl font-bold mb-4">Upload Bulk Jobs</h3>
+                        <input
+                            type="file"
+                            accept=".xlsx"
+                            onChange={(e) => setExcelFile(e.target.files[0])}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                        />
+                        <div className="flex justify-between items-center mb-4">
+                            <a
+                                onClick={handleDownloadSampleFile}
+                                className="text-blue-500 hover:underline cursor-pointer"
+                            >
+                                Download Sample File
+                            </a>
                         </div>
-                    )}
-
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                                onClick={() => setShowBulkJobModal(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${
+                                    isUploading ? "cursor-not-allowed opacity-50" : ""
+                                }`}
+                                onClick={handleFileUpload}
+                                disabled={isUploading}
+                            >
+                                {isUploading ? "Uploading..." : "Upload"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </Layout>
     );
 }

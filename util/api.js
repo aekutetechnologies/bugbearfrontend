@@ -65,3 +65,65 @@ export const fetchJobApplicants = async (id, token) => {
         throw error;
     }
 };
+
+
+export async function fetchPosts() {
+    const res = await fetch(`${API_BASE_URL}/posts`);
+    if (!res.ok) throw new Error("Failed to fetch posts");
+    return await res.json();
+  }
+  
+  export async function createPost(text, images) {
+    // Convert images to form-data or handle them however your API expects
+    // For simplicity, assume images can be base64 or not used.
+    const formData = new FormData();
+    formData.append("text", text);
+    images.forEach((file) => formData.append("images", file));
+  
+    const res = await fetch(`${API_BASE_URL}/posts`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error("Failed to create post");
+    return await res.json();
+  }
+  
+  export async function likePost(postId) {
+    const res = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
+      method: "POST",
+    });
+    if (!res.ok) throw new Error("Failed to like post");
+    return await res.json();
+  }
+  
+  export async function replyPost(postId, commentText) {
+    const res = await fetch(`${API_BASE_URL}/posts/${postId}/comment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: commentText }),
+    });
+    if (!res.ok) throw new Error("Failed to comment on post");
+    return await res.json();
+  }
+  
+  export async function likeComment(postId, commentId) {
+    const res = await fetch(
+      `${API_BASE_URL}/posts/${postId}/comments/${commentId}/like`,
+      { method: "POST" }
+    );
+    if (!res.ok) throw new Error("Failed to like comment");
+    return await res.json();
+  }
+  
+  export async function replyComment(postId, commentId, replyText) {
+    const res = await fetch(
+      `${API_BASE_URL}/posts/${postId}/comments/${commentId}/reply`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: replyText }),
+      }
+    );
+    if (!res.ok) throw new Error("Failed to reply to comment");
+    return await res.json();
+  }

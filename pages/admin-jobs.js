@@ -12,6 +12,8 @@ export default function JobsList() {
     const [jobs, setJobs] = useState([]);
     const [vdIs, setVdIs] = useState([]); // State to store the VDI list
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [jobsPerPage] = useState(10); // Set page size to 10
 
     // Helper function to format salary
     const formatSalary = (min, max) => {
@@ -137,7 +139,6 @@ export default function JobsList() {
                 },
                 body: JSON.stringify({ is_active: newStatus === 'Open' }), // Send new status
             });
-
             if (response.ok) {
                 // Update the job status in the local state after success
                 setJobs(prevJobs =>
@@ -174,91 +175,166 @@ export default function JobsList() {
         }
     };
 
+    // Pagination Logic
+    const indexOfLastJob = currentPage * jobsPerPage;
+    const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+    const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+
+    const totalPages = Math.ceil(jobs.length / jobsPerPage);
+
     return (
         <Layout>
             <div className="container">
                 <h3 className="dashboard-section-title">Your Created Jobs ({status || "all"})</h3>
+                
                 {loading ? (
                     <p>Loading jobs...</p>
-                ) : jobs.length > 0 ? (
-                    <div className="dashboard-table-wrapper">
-                        <table className="dashboard-table">
-                            <thead>
-                                <tr>
-                                    <th>Job Title</th>
-                                    <th>Location</th>
-                                    <th>Type</th>
-                                    <th>Posted</th>
-                                    <th>Salary</th>
-                                    <th>Status</th>
-                                    <th>VDI</th> {/* New column for VDI selection */}
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {jobs.map((job) => (
-                                    <tr key={job.id}>
-                                        <td onClick={() => handleJobRowClick(job.id)}>{job.title}</td>
-                                        <td onClick={() => handleJobRowClick(job.id)}>{job.location}</td>
-                                        <td onClick={() => handleJobRowClick(job.id)}>{job.job_type}</td>
-                                        <td onClick={() => handleJobRowClick(job.id)}>{job.job_created}</td>
-                                        <td onClick={() => handleJobRowClick(job.id)}>{job.salary}</td>
-                                        <td>
-                                            <select
-                                                value={job.is_active ? "Open" : "Closed"}
-                                                onChange={(e) => handleStatusChange(job.id, e.target.value)}
-                                                style={{
-                                                    paddingRight: '20px',
-                                                    appearance: 'none',
-                                                    background: 'url(data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="none" stroke="black" stroke-width=".5" d="M0 0l2 2 2-2"/></svg>) no-repeat right center',
-                                                    backgroundColor: '#fff',
-                                                    backgroundSize: '12px',
-                                                    border: '1px solid #ccc',
-                                                    borderRadius: '4px',
-                                                    padding: '5px',
-                                                    margin: 0,
-                                                }}
-                                            >
-                                                <option value="Open">Open</option>
-                                                <option value="Closed">Closed</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            {/* Dropdown to select VDI */}
-                                            <select
-                                                onChange={(e) => handleVdiChange(job.id, e.target.value)}
-                                                defaultValue=""
-                                                style={{
-                                                    appearance: 'none',
-                                                    backgroundColor: '#fff',
-                                                    padding: '5px',
-                                                    border: '1px solid #ccc',
-                                                    borderRadius: '4px',
-                                                }}
-                                            >
-                                                <option value="" disabled>Select VDI</option>
-                                                {vdIs.map(vdi => (
-                                                    <option key={vdi.id} value={vdi.id}>
-                                                        {vdi.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </td>
-                                        <td style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                                            <span onClick={() => handleApplicantsClick(job.id)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
-                                                View Applicants
-                                            </span>
-                                            <FaEdit onClick={() => handleJobRowClick(job.id)} style={{ cursor: 'pointer', color: 'blue' }} />
-                                        </td>
+                ) : currentJobs.length > 0 ? (
+                    <>
+                        <div className="dashboard-table-wrapper">
+                            <table className="dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Location</th>
+                                        <th>Type</th>
+                                        <th>Posted</th>
+                                        <th>Salary</th>
+                                        <th>Status</th>
+                                        <th>VDI</th> {/* New column for VDI selection */}
+                                        <th>Actions</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    {currentJobs.map((job) => (
+                                        <tr key={job.id}>
+                                            <td onClick={() => handleJobRowClick(job.id)}>{job.title}</td>
+                                            <td onClick={() => handleJobRowClick(job.id)}>{job.location}</td>
+                                            <td onClick={() => handleJobRowClick(job.id)}>{job.job_type}</td>
+                                            <td onClick={() => handleJobRowClick(job.id)}>{job.job_created}</td>
+                                            <td onClick={() => handleJobRowClick(job.id)}>{job.salary}</td>
+                                            <td>
+                                                <select
+                                                    value={job.is_active ? "Open" : "Closed"}
+                                                    onChange={(e) => handleStatusChange(job.id, e.target.value)}
+                                                    style={{
+                                                        paddingRight: '20px',
+                                                        appearance: 'none',
+                                                        background: 'url(data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="none" stroke="black" stroke-width=".5" d="M0 0l2 2 2-2"/></svg>) no-repeat right center',
+                                                        backgroundColor: '#fff',
+                                                        backgroundSize: '12px',
+                                                        border: '1px solid #ccc',
+                                                        borderRadius: '4px',
+                                                        padding: '5px',
+                                                        margin: 0,
+                                                    }}
+                                                >
+                                                    <option value="Open">Open</option>
+                                                    <option value="Closed">Closed</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                {/* Dropdown to select VDI */}
+                                                <select
+                                                    onChange={(e) => handleVdiChange(job.id, e.target.value)}
+                                                    defaultValue=""
+                                                    style={{
+                                                        appearance: 'none',
+                                                        backgroundColor: '#fff',
+                                                        padding: '5px',
+                                                        border: '1px solid #ccc',
+                                                        borderRadius: '4px',
+                                                    }}
+                                                >
+                                                    <option value="" disabled>Select VDI</option>
+                                                    {vdIs.map(vdi => (
+                                                        <option key={vdi.id} value={vdi.id}>
+                                                            {vdi.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </td>
+                                            <td style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                                                <span onClick={() => handleApplicantsClick(job.id)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                                                    View Applicants
+                                                </span>
+                                                <FaEdit onClick={() => handleJobRowClick(job.id)} style={{ cursor: 'pointer', color: 'blue' }} />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {/* Pagination Controls */}
+                            <div className="pagination">
+                                {currentPage > 1 && (
+                                    <button onClick={() => setCurrentPage(currentPage - 1)}>Prev</button>
+                                )}
+                                {[...Array(totalPages)].map((_, index) => (
+                                    index + 1 === currentPage ? (
+                                        <span key={index + 1} style={{ marginRight: '5px', fontWeight: 'bold' }}>{index + 1}</span> 
+                                    ) : (
+                                        <button key={index + 1} onClick={() => setCurrentPage(index + 1)} style={{ marginRight: '5px' }}>
+                                            {index + 1}
+                                        </button>
+                                    )
                                 ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                {currentPage < totalPages && (
+                                    <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
+                                )}
+                            </div>
+
+                        </div>
+
+                    </>
                 ) : (
                     <p>No jobs found for {status || "all"}.</p>
                 )}
+                
             </div>
+
+            {/* Mobile Responsive Styles */}
+            <style jsx>{`
+              .dashboard-table-wrapper {
+                  overflow-x: auto; /* Allow horizontal scrolling */
+              }
+
+              @media (max-width: 768px) {
+                  .dashboard-table th,
+                  .dashboard-table td {
+                      display: block; /* Stack table cells vertically */
+                      width: 100%; /* Full width for each cell */
+                  }
+
+                  .dashboard-table tr {
+                      margin-bottom: 15px; /* Space between rows */
+                      border-bottom: 1px solid #ccc; /* Add bottom border for clarity */
+                  }
+
+                  .dashboard-table th,
+                  .dashboard-table td:last-child {
+                      border-bottom:none; /* Remove last cell's bottom border */
+                  }
+
+                  .dashboard-section-title{
+                      font-size: 1.5em; /* Adjust title size */
+                  }
+
+                  .pagination button,
+                  .pagination span{
+                      padding: 8px;
+                      margin-right: 5px;
+                      cursor:pointer;
+                      display:inline-block;
+                      text-align:center;
+                  }
+              }
+
+              .pagination button:hover{
+                  background-color:#f0f0f0;
+              }
+          `}</style>
+
         </Layout>
     );
 }
