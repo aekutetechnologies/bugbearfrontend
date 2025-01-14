@@ -6,7 +6,7 @@ import { RxHamburgerMenu, RxCross2 } from "react-icons/rx";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 
-const AuthButtons = dynamic(() => import("../elements/AuthButtons"), { 
+const AuthButtons = dynamic(() => import("../elements/AuthButtons"), {
   ssr: false,
   loading: () => <div className="w-8 h-8 animate-pulse bg-gray-200 rounded-full" />
 });
@@ -61,54 +61,68 @@ const Header2 = () => {
   };
 
   return (
-    <header className={scroll ? "sticky-bar stick" : "sticky-bar"}>
-      <div
-        className={`
-          ${scroll 
-            ? "bg-neutral-500 bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-40 backdrop-saturate-100 backdrop-contrast-125 shadow-lg shadow-sky-200" 
-            : ""
-          }
+    <>
+      <header className={scroll ? "sticky-bar stick" : "sticky-bar"}>
+        <div
+          className={`
+          ${scroll
+              ? "bg-neutral-500 bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-40 backdrop-saturate-100 backdrop-contrast-125 shadow-lg shadow-sky-200"
+              : ""
+            }
           px-4 py-2 mx-auto max-w-[1260px] rounded-xl transition-all duration-300
         `}
-      >
-        <div className="flex items-center justify-between">
-          <div onClick={handleLogoClick} className="cursor-pointer">
-            <img 
-              className="w-32 md:w-44" 
-              alt="bugbear" 
-              src="/assets/imgs/template/jobhub-logo.svg" 
-            />
+        >
+          <div className="flex items-center justify-between">
+            <div onClick={handleLogoClick} className="cursor-pointer">
+              <img
+                className="w-32 md:w-44"
+                alt="bugbear"
+                src="/assets/imgs/template/jobhub-logo.svg"
+              />
+            </div>
+
+            {/* Desktop Menu */}
+            {/* <div className="hidden lg:block" > */}
+            <div className="hidden-laptop" >
+              <AuthButtons isMobile={false} />
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <RxCross2 size={24} className="text-gray-600" />
+              ) : (
+                <RxHamburgerMenu size={24} className="text-gray-600" />
+              )}
+            </button>
           </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:block">
-            <AuthButtons isMobile={false} />
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <RxCross2 size={24} className="text-gray-600" />
-            ) : (
-              <RxHamburgerMenu size={24} className="text-gray-600" />
-            )}
-          </button>
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden mt-4 py-4">
+              <AuthButtons isMobile={true} closeMobileMenu={() => setMobileMenuOpen(false)} />
+            </div>
+          )}
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden mt-4 py-4">
-            <AuthButtons isMobile={true} closeMobileMenu={() => setMobileMenuOpen(false)} />
-          </div>
-        )}
-      </div>
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      </header>
+      <style jsx>{`
+        .hidden-laptop {
+  display: none;
+}
 
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-    </header>
+@media (min-width: 1024px) {
+  .hidden-laptop {
+    display: block;
+  }
+}
+      `}</style>
+    </>
   );
 };
 

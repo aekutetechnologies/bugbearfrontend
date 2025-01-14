@@ -88,8 +88,8 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
         </button>
       ) : (userType === "1" || userType === "2") && (
         <div className={`
-          ${isMobileView 
-            ? 'flex flex-col space-y-1 w-full' 
+          ${isMobileView
+            ? 'flex flex-col space-y-1 w-full'
             : 'flex items-center space-x-1 md:space-x-2'
           }
         `}>
@@ -132,20 +132,20 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
     return (
       <div className={`
         flex 
-        ${isMobile 
-          ? 'flex-col space-y-4' 
+        ${isMobile
+          ? 'flex-col space-y-4'
           : 'items-center space-x-4 md:space-x-6'
         }
       `}>
-        <Link 
-          href="/choose-role" 
+        <Link
+          href="/choose-role"
           className="text-gray-700 hover:text-gray-900 font-medium"
           onClick={closeMobileMenu}
         >
           Register
         </Link>
-        <Link 
-          href="/login" 
+        <Link
+          href="/login"
           className="btn btn-default btn-shadow hover-up"
           onClick={closeMobileMenu}
         >
@@ -168,10 +168,10 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
             <span className="font-medium">Hi, {profileData?.first_name || "User"}</span>
           </div>
         </div>
-        
+
         <div className="py-2">
           <NavigationLinks isMobileView={true} />
-          
+
           <button
             onClick={() => handleNavigate(userType === "1" ? "/candidate-profile" : userType === "2" ? "/organization-profile" : "/recruiter-profile")}
             className="w-full text-left flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
@@ -179,7 +179,7 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
             <FaUserCircle className="w-5 h-5" />
             <span>View Profile</span>
           </button>
-          
+
           <button
             onClick={handleLogout}
             className="w-full text-left flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-gray-50 rounded-lg transition-colors"
@@ -197,7 +197,7 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
       <div className="hidden md:block">
         <NavigationLinks isMobileView={false} />
       </div>
-      
+
       <div className="relative profile-dropdown">
         <button
           className="flex items-center space-x-2 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors"
@@ -226,7 +226,7 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
               <FaUserCircle className="w-5 h-5" />
               <span>View Profile</span>
             </button>
-            
+
             <button
               onClick={handleLogout}
               className="w-full text-left flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-gray-50"
