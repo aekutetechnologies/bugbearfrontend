@@ -53,13 +53,13 @@ export default function Home() {
         <>
             <Layout>
                 {/* Hero Section */}
-                <section className="section-box">
+                <section className="section-box ">
                     <div className="container mx-auto">
-                        <div className="banner-hero hero-1">
-                            <div className="banner-inner">
-                                <div className="row">
-                                    <div className="col-xl-8 col-lg-12">
-                                        <div className="block-banner">
+                        <div className="banner-hero hero-1  ">
+                            <div className="banner-inner  ">
+                                <div className="row ">
+                                    <div className="col-xl-8 col-lg-12  ">
+                                        <div className="block-banner ">
                                             <h1 className="heading-banner wow animate__animated animate__fadeInUp">
                                                 The <span className="color-brand-2">Easiest Way</span>
                                                 <br className="d-none d-lg-block" />
@@ -113,7 +113,7 @@ export default function Home() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-xl-4 col-lg-12 d-none d-xl-block col-md-6">
+                                    <div className="col-xl-4 col-lg-12 d-none d-xl-block col-md-6 ">
                                         <div className="banner-imgs">
                                             <div className="block-1 shape-1">
                                                 <img
@@ -301,7 +301,7 @@ export default function Home() {
                     <div className="container mx-auto">
                         <div className="box-newsletter">
                             <div className="flex flex-wrap justify-center">
-                                <div className="xl:flex flex-col items-center">
+                                {/* <div className="xl:flex flex-col items-center">
                                     <img
                                         src="assets/imgs/template/newsletter1.jpg"
                                         alt="joxBox"
@@ -312,7 +312,7 @@ export default function Home() {
                                         alt="joxBox"
                                         className="w-36 rounded-lg mt-4"
                                     />
-                                </div>
+                                </div> */}
                                 <div className="col-lg-12 col-xl-6 col-12">
                                     <h2 className="text-md-newsletter text-center">
                                         New Things Will Always
@@ -334,7 +334,7 @@ export default function Home() {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="xl:flex flex-col items-center">
+                                {/* <div className="xl:flex flex-col items-center">
                                     <img
                                         src="assets/imgs/template/newsletter4.jpeg"
                                         alt="joxBox"
@@ -345,7 +345,7 @@ export default function Home() {
                                         alt="joxBox"
                                         className="w-20 rounded-lg relative top-20 -left-2 mt-4"
                                     />
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -386,9 +386,9 @@ export default function Home() {
                         .banner-hero .banner-imgs {
                             display: none;
                         }
-                        .banner-hero .block-banner {
-                            text-align: center;
-                        }
+                        // .banner-hero .block-banner {
+                        //     text-align: center;
+                        // }
                         .banner-hero .heading-banner {
                             font-size: 2.5rem;
                         }
