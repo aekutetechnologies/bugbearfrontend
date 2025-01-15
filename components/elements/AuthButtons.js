@@ -193,8 +193,9 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
   }
 
   return (
+    <>
     <div className="flex items-center space-x-2 md:space-x-4">
-      <div className="hidden md:block">
+      <div className="hidden-laptop">
         <NavigationLinks isMobileView={false} />
       </div>
 
@@ -238,6 +239,18 @@ const AuthButtons = ({ isMobile, closeMobileMenu }) => {
         )}
       </div>
     </div>
+    <style jsx>{`
+        .hidden-laptop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hidden-laptop {
+    display: block;
+  }
+}
+      `}</style>
+    </>
   );
 };
 
