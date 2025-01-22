@@ -1,39 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { likeComment, replyComment } from "../../../util/api";
 import ReplyItem from "./ReplyItem";
+import { ArrowLeft, MoreHorizontal, MessageCircle, Heart, Bookmark, Share2 } from "lucide-react";
 
 export default function CommentItem({ postId, comment, updatePostInFeed }) {
-  const [localLikes, setLocalLikes] = useState(comment.likes);
-  const [replies, setReplies] = useState(comment.replies || []);
+  const [localLikes, setLocalLikes] = useState(comment.likes.length);
   const [replyText, setReplyText] = useState("");
+  const [token, setToken] = useState(null);
+
+  // Fetch user token from localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) setToken(token);
+  }, []);
 
   const handleLikeComment = async () => {
+    if (!token) {
+      router.push('/login');
+      return;
+    }
     try {
-      const updatedPost = await likeComment(postId, comment.id);
-      // Find updated comment in the returned post
+      const updatedPost = await likeComment(postId, comment.id, token);
       const updatedComment = updatedPost.comments.find((c) => c.id === comment.id);
-      setLocalLikes(updatedComment.likes);
-      setReplies(updatedComment.replies);
-      // Propagate changes up
-      updatePostInFeed(updatedPost);
+      setLocalLikes(updatedComment.likes.length); // Update local likes
+      updatePostInFeed(updatedPost); // Update the parent feed
     } catch (error) {
       console.error("Failed to like comment:", error);
-    }
-  };
-
-  const handleReply = async (e) => {
-    e.preventDefault();
-    if (!replyText.trim()) return;
-
-    try {
-      const updatedPost = await replyComment(postId, comment.id, replyText.trim());
-      setReplyText("");
-      // Find updated comment in the returned post
-      const updatedComment = updatedPost.comments.find((c) => c.id === comment.id);
-      setReplies(updatedComment.replies);
-      updatePostInFeed(updatedPost);
-    } catch (error) {
-      console.error("Failed to reply to comment:", error);
     }
   };
 
@@ -43,54 +35,36 @@ export default function CommentItem({ postId, comment, updatePostInFeed }) {
       <div className="d-flex align-items-center mb-5">
         <div className="image-box mr-10">
           <img
-            src={comment.userImage || "/assets/imgs/default-avatar.png"}
-            alt={comment.userName}
+            src={comment.comment_user.profile_pic_url || "/assets/imgs/default-avatar.png"}
+            alt={comment.comment_user.first_name}
             style={{ width: 30, height: 30, borderRadius: "50%" }}
           />
         </div>
         <div>
-          <strong>{comment.userName}</strong>
+          <strong>{comment.comment_user.first_name}</strong>
         </div>
       </div>
 
-      {/* Comment Text */}
-      <div className="mb-5">{comment.text}</div>
+      {/* Comment Body */}
+      <div className="mb-5">{comment.body}</div>
 
-      {/* Like & Reply Buttons */}
-      <div className="d-flex align-items-center mb-10">
-        <button className="btn btn-grey-small mr-10" onClick={handleLikeComment}>
-          <i className="fa fa-thumbs-up" /> Like ({localLikes})
-        </button>
+      {/* Like Button */}
+      <div
+        className="d-flex align-items-center justify-content-between"
+        style={{
+          borderTop: "1px solid #e6e6e6",
+          paddingTop: "12px",
+          marginTop: "12px",
+        }}
+      >
+        <span
+          className="d-flex align-items-center gap-1"
+          style={{ color: localLikes > 0 ? "#ff4d4f" : "#6c757d", fontSize: "14px", cursor: "pointer" }}
+          onClick={handleLikeComment}
+        >
+          <Heart size={18} color={localLikes > 0 ? "#ff4d4f" : "#6c757d"} /> {localLikes} likes
+        </span>
       </div>
-
-      {/* Replies */}
-      {replies.map((reply) => (
-        <ReplyItem
-          key={reply.id}
-          postId={postId}
-          parentCommentId={comment.id}
-          reply={reply}
-          updatePostInFeed={updatePostInFeed}
-        />
-      ))}
-
-      {/* Reply Form */}
-      <form onSubmit={handleReply}>
-        <div className="d-flex mb-5">
-          <textarea
-            className="form-input mr-10"
-            placeholder="Reply..."
-            rows={1}
-            style={{ width: "70%" }}
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-          />
-          <button className="btn btn-grey-small" type="submit">
-            Reply
-          </button>
-        </div>
-      </form>
-      <hr />
     </div>
   );
 }

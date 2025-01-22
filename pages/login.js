@@ -49,10 +49,10 @@ export default function Signin() {
 
                 // Redirect to dashboard or another protected page
                 if (data.user_type === 3) {
-                    router.push('/dashboard');  
+                    router.push('/feed');  
                     toast.success(data.msg || "Login successful!");
                 } else {
-                    router.push('/jobs-list');  
+                    router.push('/feed');  
                     toast.success(data.msg || "Login successful!");
                 }
             } else {

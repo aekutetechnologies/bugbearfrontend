@@ -1,83 +1,139 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { likePost } from "../../util/api";
-import CommentList from "./comments/CommentList";
+import { formatDistanceToNow } from "date-fns";
+import { useRouter } from "next/router";
+import {
+  ArrowLeft,
+  MoreHorizontal,
+  MessageCircle,
+  Heart,
+  Bookmark,
+  Share2,
+} from "lucide-react";
 
 export default function PostItem({ post, updatePostInFeed }) {
-  // Local states for immediate UI feedback (optional)
-  const [localLikes, setLocalLikes] = useState(post.likes);
-  const [comments, setComments] = useState(post.comments || []);
+  const [localLikes, setLocalLikes] = useState(post?.likes?.length || 0);
+  const [showFullContent, setShowFullContent] = useState(false);
+  const router = useRouter();
 
   const handleLike = async () => {
     try {
-      const updatedPost = await likePost(post.id);
-      // Update local states
-      setLocalLikes(updatedPost.likes);
-      setComments(updatedPost.comments);
-      // Notify parent to sync
+      const accessToken = localStorage.getItem("accessToken");
+      const updatedPost = await likePost(post.id, accessToken);
+      setLocalLikes(updatedPost.likes?.length || 0);
       updatePostInFeed(updatedPost);
     } catch (error) {
       console.error("Failed to like post:", error);
     }
   };
 
-  // Child comment components will call this to update the entire post
-  const handleUpdatePost = (updated) => {
-    setLocalLikes(updated.likes);
-    setComments(updated.comments || []);
-    updatePostInFeed(updated);
+  const handleReplyClick = () => {
+    router.push(`/post/${post.id}`); // Redirect to post detail page
   };
 
+  const toggleContent = () => setShowFullContent(!showFullContent);
+
+  const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+
   return (
-    <div className="card-grid-2 hover-up mb-20">
-      <div className="card-block-info p-20">
-        {/* Post Header */}
-        <div className="d-flex align-items-center mb-15">
-          <div className="image-box mr-15">
+    <div
+      style={{
+        backgroundColor: "#fff",
+        border: "1px solid #e6e6e6",
+        borderRadius: "10px",
+        padding: "16px",
+        marginBottom: "20px",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      {/* Header Section */}
+      <div className="d-flex align-items-center justify-content-between mb-3">
+        <div className="d-flex align-items-center">
+          <img
+            src={post.user?.profile_pic_url || "/assets/imgs/default-avatar.png"}
+            alt={`${post.user?.first_name || "User"}'s profile`}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              marginRight: "12px",
+            }}
+          />
+          <div>
+            <h5 style={{ fontSize: "16px", margin: 0 }}>{post.user?.first_name || "Anonymous"}</h5>
+            <span style={{ color: "#6c757d", fontSize: "12px" }}>{timeAgo}</span>
+          </div>
+        </div>
+        <MoreHorizontal size={20} color="#6c757d" />
+      </div>
+
+      {/* Content Section */}
+      <div style={{ marginBottom: "12px" }}>
+        <h6 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "8px" }}>{post.title}</h6>
+        <p style={{ fontSize: "14px", color: "#495057", marginBottom: 0 }}>
+          {showFullContent ? post.content : `${post.content.slice(0, 100)}...`}
+          {post.content.length > 100 && (
+            <span
+              onClick={toggleContent}
+              style={{
+                color: "#007bff",
+                cursor: "pointer",
+                marginLeft: "6px",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}
+            >
+              {showFullContent ? "See Less" : "See More"}
+            </span>
+          )}
+        </p>
+
+        {/* Image Section */}
+        {post.post_image_url && (
+          <div style={{ marginTop: "12px" }}>
             <img
-              src={post.userImage || "/assets/imgs/default-avatar.png"}
-              alt={post.userName}
-              style={{ width: 50, height: 50, borderRadius: "50%" }}
+              src={post.post_image_url}
+              alt="Post Image"
+              style={{
+                width: "100%",
+                maxHeight: "400px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
             />
           </div>
-          <div>
-            <h5 className="mb-0">{post.userName}</h5>
-            <span className="text-muted text-small">
-              {new Date(post.createdAt).toLocaleString() || "Just now"}
-            </span>
-          </div>
-        </div>
-
-        {/* Post Content */}
-        <p className="mt-10 mb-10">{post.text}</p>
-
-        {/* Post Images */}
-        {post.images && post.images.length > 0 && (
-          <div className="mb-10">
-            {post.images.map((imgUrl, idx) => (
-              <img
-                key={idx}
-                src={imgUrl}
-                alt="Post"
-                style={{ maxWidth: "100%", marginRight: "10px" }}
-              />
-            ))}
-          </div>
         )}
+      </div>
 
-        {/* Like & Comment Controls */}
-        <div className="d-flex justify-content-between mt-10 mb-10">
-          <button className="btn btn-grey-small" onClick={handleLike}>
-            <i className="fa fa-thumbs-up" /> Like ({localLikes})
-          </button>
-          <span>{comments.length} Comment(s)</span>
-        </div>
-
-        {/* Comments Section */}
-        <CommentList
-          postId={post.id}
-          comments={comments}
-          updatePostInFeed={handleUpdatePost}
-        />
+      {/* Actions Section */}
+      <div
+        className="d-flex align-items-center justify-content-between"
+        style={{
+          borderTop: "1px solid #e6e6e6",
+          paddingTop: "12px",
+          marginTop: "12px",
+        }}
+      >
+        <span
+          className="d-flex align-items-center gap-1"
+          style={{ color: "#6c757d", fontSize: "14px", cursor: "pointer" }}
+          onClick={handleReplyClick}
+        >
+          <MessageCircle size={18} color="#6c757d" /> 1 reply
+        </span>
+        <span
+          className="d-flex align-items-center gap-1"
+          style={{ color: localLikes > 0 ? "#ff4d4f" : "#6c757d", fontSize: "14px", cursor: "pointer" }}
+          onClick={handleLike}
+        >
+          <Heart size={18} color={localLikes > 0 ? "#ff4d4f" : "#6c757d"} /> {localLikes} likes
+        </span>
+        <span
+          className="d-flex align-items-center gap-1"
+          style={{ color: "#6c757d", fontSize: "14px", cursor: "pointer" }}
+        >
+          <Share2 size={18} color="#6c757d" /> Share
+        </span>
       </div>
     </div>
   );

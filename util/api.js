@@ -1,129 +1,149 @@
-// util/api.js
-
 import API_BASE_URL from "./config";
 
-export const fetchProfileData = async (token) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}user/user-details/`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+// Utility function to add token to API requests
+export const fetchWithToken = async (url, options = {}, token) => {
+  try {
+    const headers = {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    };
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch profile data");
-        }
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+      ...options,
+      headers,
+    });
 
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching profile data:", error);
-        throw error;
+    if (!response.ok) {
+      throw new Error(`API call failed: ${response.statusText}`);
     }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchWithToken:", error);
+    throw error;
+  }
+};
+
+
+export const fetchProfileData = async (token) => {
+  return await fetchWithToken("user/user-details/", { method: "GET" }, token);
 };
 
 export const fetchCandidateDetails = async (id, token) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}user/candidate/${id}/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,  // Pass token in Authorization header
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch candidate details");
-        }
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching candidate details:", error);
-        throw error;
-    }
+  return await fetchWithToken(`user/candidate/${id}/`, { method: "GET" }, token);
 };
 
 export const fetchJobApplicants = async (id, token) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}jobs/applicants/${id}/`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch applicants: ${response.status}`);
-        }
-
-        const applicants = await response.json();
-        return applicants;
-    } catch (error) {
-        console.error("Error fetching job applicants:", error);
-        throw error;
-    }
+  return await fetchWithToken(`jobs/applicants/${id}/`, { method: "GET" }, token);
 };
 
-
-export async function fetchPosts() {
-    const res = await fetch(`${API_BASE_URL}/posts`);
-    if (!res.ok) throw new Error("Failed to fetch posts");
-    return await res.json();
+export const fetchPosts = async (page, limit) => {
+  try {
+    if (!page || !limit) {
+      page = 1;
+      limit = 5;
+    }
+    const response = await fetch(`${API_BASE_URL}posts/?page=${page}&limit=${limit}`, { method: "GET" });
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
   }
-  
-  export async function createPost(text, images) {
-    // Convert images to form-data or handle them however your API expects
-    // For simplicity, assume images can be base64 or not used.
-    const formData = new FormData();
-    formData.append("text", text);
-    images.forEach((file) => formData.append("images", file));
-  
-    const res = await fetch(`${API_BASE_URL}/posts`, {
+};
+
+export async function createPost({ content, images, token }) {
+  const formData = new FormData();
+  formData.append("content", content);
+  console.log("images", images);
+
+  images.forEach((image) => {
+    console.log("image", image);
+    formData.append("image", image);
+  });
+
+  return await fetchWithToken(
+    "posts/",
+    {
       method: "POST",
       body: formData,
-    });
-    if (!res.ok) throw new Error("Failed to create post");
-    return await res.json();
-  }
-  
-  export async function likePost(postId) {
-    const res = await fetch(`${API_BASE_URL}/posts/${postId}/like`, {
-      method: "POST",
-    });
-    if (!res.ok) throw new Error("Failed to like post");
-    return await res.json();
-  }
-  
-  export async function replyPost(postId, commentText) {
-    const res = await fetch(`${API_BASE_URL}/posts/${postId}/comment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: commentText }),
-    });
-    if (!res.ok) throw new Error("Failed to comment on post");
-    return await res.json();
-  }
-  
-  export async function likeComment(postId, commentId) {
-    const res = await fetch(
-      `${API_BASE_URL}/posts/${postId}/comments/${commentId}/like`,
-      { method: "POST" }
-    );
-    if (!res.ok) throw new Error("Failed to like comment");
-    return await res.json();
-  }
-  
-  export async function replyComment(postId, commentId, replyText) {
-    const res = await fetch(
-      `${API_BASE_URL}/posts/${postId}/comments/${commentId}/reply`,
+    },
+    token
+  );
+}
+
+
+export async function likePost(postId, token) {
+  return await fetchWithToken(`posts/${postId}/like/`, { method: "POST" }, token);
+}
+
+
+export async function replyPost(postId, commentText, token) {
+  try {
+    const response = await fetchWithToken(
+      `posts/comments/${postId}/`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: replyText }),
-      }
+        body: JSON.stringify({ body: commentText }),
+      },
+      token
     );
-    if (!res.ok) throw new Error("Failed to reply to comment");
-    return await res.json();
+    return response;
+  } catch (error) {
+    console.error("Error adding comment to post:", error);
+    throw error;
   }
+}
+
+export async function likeComment(postId, commentId, token) {
+  try {
+    const response = await fetchWithToken(
+      `posts/like/${commentId}/`,
+      { method: "POST" },
+      token
+    );
+    return response;
+  } catch (error) {
+    console.error("Error liking/unliking comment:", error);
+    throw error;
+  }
+}
+
+export async function replyComment(postId, commentId, replyText, token) {
+  try {
+    const response = await fetchWithToken(
+      `posts/comments/update/${commentId}/`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: replyText }),
+      },
+      token
+    );
+    return response;
+  } catch (error) {
+    console.error("Error replying to comment:", error);
+    throw error;
+  }
+}
+
+export async function fetchComments(postId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}posts/comments/${postId}/`, { method: "GET" });
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+}
+  
+
+export async function fetchPostDetails(postId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}posts/${postId}/`, { method: "GET" });
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching post details:", error);
+    throw error;
+  }
+}

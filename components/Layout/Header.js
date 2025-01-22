@@ -80,9 +80,9 @@ const Header = ({ handleOpen, handleRemove, openClass }) => {
                                             !isLoggedIn
                                                 ? "/"
                                                 : userType === "3"
-                                                    ? "/dashboard"
+                                                    ? "/feed"
                                                     : userType === "1" || userType === "2"
-                                                        ? "/jobs-list"
+                                                        ? "/feed"
                                                         : "/"
                                         }
                                         className="d-flex"
@@ -96,50 +96,18 @@ const Header = ({ handleOpen, handleRemove, openClass }) => {
                             </div>
                         </div>
                         <div className="header-nav bg-gray-500">
-                            {/* <nav className="nav-main-menu">
-                                <ul>
-                                   
-                                    {isLoggedIn && userType === "3" && (
-                                        <li className=''>
-                                            <Link href="/dashboard" >
-                                                Dashboard
-                                            </Link>
-                                        </li>
-                                    )}
-
-                                    {isLoggedIn && (userType === "1" || userType === "2") && (
-                                        <>
-                                            <li>
-                                                <Link href="/jobs-list" className="nav-link">
-                                                    Search Jobs
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link href="/applied-jobs" className="nav-link">
-                                                    My Jobs
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link href="/saved-jobs" className="nav-link">
-                                                    Saved Jobs
-                                                </Link>
-                                            </li>
-                                        </>
-                                    )}
-                                </ul>
-                            </nav> */}
-                            <div
-                                className={`burger-icon burger-icon-white ${openClass && "burger-close"
-                                    }`}
-                                onClick={() => {
-                                    handleOpen();
-                                    handleRemove();
-                                }}
-                            >
-                                <span className="burger-icon-top" />
-                                <span className="burger-icon-mid" />
-                                <span className="burger-icon-bottom" />
-                            </div>
+                        <div
+                            className={`burger-icon burger-icon-white ${openClass && "burger-close"
+                                }`}
+                            onClick={() => {
+                                handleOpen();
+                                handleRemove();
+                            }}
+                        >
+                            <span className="burger-icon-top" />
+                            <span className="burger-icon-mid" />
+                            <span className="burger-icon-bottom" />
+                        </div>
                         </div>
                         <div className="header-right bg-gray-400 ">
                                 {isLoggedIn && userType === "3" && (

@@ -51,9 +51,9 @@ const Header2 = () => {
     const userType = localStorage.getItem("userType");
 
     if (token && userType === "3") {
-      router.push("/dashboard/");
+      router.push("/feed/");
     } else if (token && (userType === "1" || userType === "2")) {
-      router.push("/jobs-list/");
+      router.push("/feed/");
     } else {
       router.push("/");
     }
