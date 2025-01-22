@@ -2832,7 +2832,7 @@ ul li:last-child .card-list-4 {
 .banner-hero .block-banner {
   position: relative;
   z-index: 12;
-  padding: 50px 180px 80px 192px;
+  padding: 160px 150px 80px 50px;
 }
 .banner-hero .block-banner .form-find {
   background: #ffffff;
