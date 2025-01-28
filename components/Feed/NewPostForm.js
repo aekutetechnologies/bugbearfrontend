@@ -77,6 +77,7 @@ export default function NewPostForm({ onCreatePost, onCancel, token }) {
           <button
             className="btn btn-default btn-find font-sm mr-10"
             type="submit"
+            onClick={handleSubmit}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Posting..." : "Post"}
