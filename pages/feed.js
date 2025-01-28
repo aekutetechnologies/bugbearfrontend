@@ -22,31 +22,31 @@ export default function Feed() {
     if (token) setUserToken(token);
   }, []);
 
+  const loadPosts = async () => {
+    if (loading || !hasMorePosts) return; // Avoid multiple simultaneous loads
+
+    setLoading(true); // Start loading
+    try {
+      const profile = await fetchProfileData(userToken);
+      setProfileData(profile);
+
+      // Fetch posts with pagination
+      const data = await fetchPosts(page, 5);
+
+      // Check if data exists and update state
+      if (data?.results) {
+        setPosts((prevPosts) => [...prevPosts, ...data.results]);
+        setHasMorePosts(data.next !== null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
   // Fetch posts on token change and page change
   useEffect(() => {
-    const loadPosts = async () => {
-      if (loading || !hasMorePosts) return; // Avoid multiple simultaneous loads
-
-      setLoading(true); // Start loading
-      try {
-        const profile = await fetchProfileData(userToken);
-        setProfileData(profile);
-
-        // Fetch posts with pagination
-        const data = await fetchPosts(page, 5);
-
-        // Check if data exists and update state
-        if (data?.results) {
-          setPosts((prevPosts) => [...prevPosts, ...data.results]);
-          setHasMorePosts(data.next !== null);
-        }
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
-
     if (userToken) loadPosts();
   }, [userToken, page]); // Fetch posts when page or userToken changes
 
@@ -64,11 +64,13 @@ export default function Feed() {
 
   const handleCancel = () => {
     setShowModal(false);
+    loadPosts(); // Reload posts after canceling
     console.log("Post creation canceled");
   };
 
   const handlePostSubmit = () => {
     console.log("Post submitted");
+    loadPosts(); // Reload posts after submitting
     setShowModal(false); // Close modal after submitting the post
   };
 

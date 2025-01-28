@@ -51,15 +51,15 @@ export const fetchPosts = async (page, limit) => {
   }
 };
 
-export async function createPost({ content, images, token }) {
+export async function createPost({ content, images = [], token }) {
   const formData = new FormData();
   formData.append("content", content);
-  console.log("images", images);
 
-  images.forEach((image) => {
-    console.log("image", image);
-    formData.append("image", image);
-  });
+  if (Array.isArray(images) && images.length > 0) {
+    images.forEach((image, index) => {
+      formData.append(`image${index}`, image); // Add images to FormData
+    });
+  }
 
   return await fetchWithToken(
     "posts/",
@@ -70,6 +70,8 @@ export async function createPost({ content, images, token }) {
     token
   );
 }
+
+
 
 
 export async function likePost(postId, token) {
