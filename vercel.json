@@ -1,5 +1,4 @@
 {
   "version": 2,
-  "buildCommand": "next build",
-  "outputDirectory": ".next"
+  "buildCommand": "next build"
 }
