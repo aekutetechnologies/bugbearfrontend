@@ -61,17 +61,17 @@ export default function Home() {
                                     <div className="col-xl-8 col-lg-12  ">
                                         <div className="block-banner ">
                                             <h1 className="heading-banner wow animate__animated animate__fadeInUp">
-                                                The <span className="color-brand-2">Easiest Way</span>
+                                                The <span className="color-brand-2">Premier Platform </span>
                                                 <br className="d-none d-lg-block" />
-                                                to Get Your New Job
+                                                for Cybersecurity Careers
                                             </h1>
                                             <div
                                                 className="banner-description mt-20 wow animate__animated animate__fadeInUp"
                                                 data-wow-delay=".1s"
                                             >
-                                                Each month, more than 3 million job seekers turn to <br className="d-none d-lg-block" />
-                                                website in their search for work, making over 140,000 <br className="d-none d-lg-block" />
-                                                applications every single day
+                                                Each month, over 1k+ cybersecurity professionals trust <br className="d-none d-lg-block" />
+                                                our platform in their search for specialized roles, resulting in <br className="d-none d-lg-block" />
+                                                10,000+ applications for critical security positions daily
                                             </div>
                                             <div
                                                 className="form-find mt-40 wow animate__animated animate__fadeIn"
@@ -96,19 +96,19 @@ export default function Home() {
                                             >
                                                 <strong>Popular Searches:</strong>
                                                 <Link href={{ pathname: '/jobs-list', query: { category: 'devsecops' } }}>
-                                                    devsecops,
+                                                    DevSecOps,
                                                 </Link>
                                                 <Link href={{ pathname: '/jobs-list', query: { category: 'vpat' } }}>
-                                                    vpat,
+                                                    VPAT,
                                                 </Link>
                                                 <Link href={{ pathname: '/jobs-list', query: { category: 'network-security' } }}>
-                                                    network security,
+                                                    Network Security,
                                                 </Link>
                                                 <Link href={{ pathname: '/jobs-list', query: { category: 'webproxy' } }}>
-                                                    webproxy,
+                                                    Web Proxy,
                                                 </Link>
                                                 <Link href={{ pathname: '/jobs-list', query: { category: 'socaas' } }}>
-                                                    socaas,
+                                                    SOCaaS,
                                                 </Link>
                                             </div>
                                         </div>
@@ -177,10 +177,10 @@ export default function Home() {
                         <div className="container mx-auto">
                             <div className="text-center">
                                 <h2 className="text-3xl font-bold mb-6 animate__animated animate__fadeInUp">
-                                    Browse by category
+                                    Browse by security specialty
                                 </h2>
                                 <p className="text-lg text-gray-500 animate__animated animate__fadeInUp">
-                                    Find the job that’s perfect for you. About 800+ new jobs every day.
+                                    Find specialized cybersecurity roles tailored to your expertise. Over 800+ new security positions daily.
                                 </p>
                             </div>
                             <div className="mt-12 ">
@@ -199,8 +199,8 @@ export default function Home() {
                                 <span className="text-hiring">Hiring</span>
                             </div>
                             <div className="text-2">
-                                Let’s <span className="color-brand-1">Work</span> Together
-                                <br /> &amp; <span className="color-brand-1">Explore</span> Opportunities
+                                Secure <span className="color-brand-1">Solutions</span> Need
+                                <br /> <span className="color-brand-1">Expert</span> Defenders
                             </div>
                             <div className="text-3">
                                 <div
@@ -225,13 +225,13 @@ export default function Home() {
                                 <span className="count">25</span>
                                 <span> K+</span>
                             </h1>
-                            <h5 className="text-lg font-medium">Completed Cases</h5>
+                            <h5 className="text-lg font-medium">Security Positions Filled</h5>
                             <p className="text-sm text-gray-500 mt-2">
-                                We always provide people a
+                                We've successfully matched thousands
                                 <br className="hidden lg:block" />
-                                complete solution upon focused on
+                                of cybersecurity professionals with
                                 <br className="hidden lg:block" />
-                                any business
+                                their ideal roles
                             </p>
                         </div>
                         <div className="text-center">
@@ -239,13 +239,13 @@ export default function Home() {
                                 <span className="count">17</span>
                                 <span> +</span>
                             </h1>
-                            <h5 className="text-lg font-medium">Our Office</h5>
+                            <h5 className="text-lg font-medium">Global Locations</h5>
                             <p className="text-sm text-gray-500 mt-2">
-                                We always provide people a
+                                Our network spans continents to
                                 <br className="hidden lg:block" />
-                                complete solution upon focused on
+                                connect security talent with leading
                                 <br className="hidden lg:block" />
-                                any business
+                                organizations worldwide
                             </p>
                         </div>
                         <div className="text-center">
@@ -253,13 +253,13 @@ export default function Home() {
                                 <span className="count">86</span>
                                 <span> +</span>
                             </h1>
-                            <h5 className="text-lg font-medium">Skilled People</h5>
+                            <h5 className="text-lg font-medium">Security Specializations</h5>
                             <p className="text-sm text-gray-500 mt-2">
-                                We always provide people a
+                                From threat intelligence to
                                 <br className="hidden lg:block" />
-                                complete solution upon focused on
+                                compliance experts, we cover all
                                 <br className="hidden lg:block" />
-                                any business
+                                cybersecurity disciplines
                             </p>
                         </div>
                         <div className="text-center">
@@ -267,13 +267,13 @@ export default function Home() {
                                 <span className="count">28</span>
                                 <span> +</span>
                             </h1>
-                            <h5 className="text-lg font-medium">Happy Clients</h5>
+                            <h5 className="text-lg font-medium">Fortune 500 Clients</h5>
                             <p className="text-sm text-gray-500 mt-2">
-                                We always provide people a
+                                Leading enterprises trust our
                                 <br className="hidden lg:block" />
-                                complete solution upon focused on
+                                platform to secure their most
                                 <br className="hidden lg:block" />
-                                any business
+                                critical security talent needs
                             </p>
                         </div>
                     </div>
@@ -284,10 +284,10 @@ export default function Home() {
                     <div className="container mx-auto">
                         <div className="text-center">
                             <h2 className="text-3xl font-bold mb-4 animate__animated animate__fadeInUp">
-                                Top Recruiters
+                                Top Security Recruiters
                             </h2>
                             <p className="text-lg text-gray-600 animate__animated animate__fadeInUp">
-                                Discover your next career move, freelance gig, or internship
+                                Connect with leading cybersecurity employers and consultancies
                             </p>
                         </div>
                         <div className="mt-12">
@@ -315,8 +315,8 @@ export default function Home() {
                                 </div> */}
                                 <div className="col-lg-12 col-xl-6 col-12">
                                     <h2 className="text-md-newsletter text-center">
-                                        New Things Will Always
-                                        <br /> Update Regularly
+                                        Stay Updated on Emerging
+                                        <br /> Security Threats & Opportunities
                                     </h2>
                                     <div className="box-form-newsletter mt-40">
                                         <form className="form-newsletter" onSubmit={handleSubscribe}>
