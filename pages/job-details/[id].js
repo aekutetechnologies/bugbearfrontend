@@ -403,7 +403,7 @@ export default function JobDetails({ job: initialJob, featuredJobs, token }) {
                 <h2>VDI Connection Information</h2>
                 <p>
                   <a
-                    href="https://ap-south-1.webclient.amazonworkspaces.com/registration"
+                    href="https://us-east-1.webclient.amazonworkspaces.com/wsp.html"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -411,10 +411,10 @@ export default function JobDetails({ job: initialJob, featuredJobs, token }) {
                   </a>
                 </p>
                 <p>
-                  <strong>Registration code:</strong> wsbom+XG7BUF 
+                  <strong>Registration code:</strong> SLiad+PWFSH4 
                   <button
                     className="copy-button"
-                    onClick={() => copyToClipboard("wsbom+XG7BUF")}
+                    onClick={() => copyToClipboard("SLiad+PWFSH4")}
                   >
                     <FaCopy />
                   </button>
